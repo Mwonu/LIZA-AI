@@ -1,21 +1,21 @@
-FROM node:lts-buster
+FROM node:18-bullseye
 
-# system packages installing
+# സിസ്റ്റം പാക്കേജുകൾ ഇൻസ്റ്റാൾ ചെയ്യുന്നു
 RUN apt-get update && \
-  apt-get install -y \
-  ffmpeg \
-  imagemagick \
-  webp && \
-  apt-get upgrade -y && \
-  rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+    ffmpeg \
+    imagemagick \
+    webp && \
+    rm -rf /var/lib/apt/lists/*
 
-# project files copying
+# പ്രോജക്റ്റ് ഫയലുകൾ കോപ്പി ചെയ്യുന്നു
+WORKDIR /app
 COPY package.json .
 RUN npm install
 
 COPY . .
 
-#  hugging face using port
+# Hugging Face-ന് ആവശ്യമായ പോർട്ട്
 EXPOSE 7860
 
 CMD ["node", "index.js"]
