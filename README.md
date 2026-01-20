@@ -23,7 +23,7 @@ Click the button below to fork the Knight Bot repository to your GitHub account:
 
 ### Step 2: Get Pair Code
 
-Deploy the bot and easily connect it to your WhatsApp account by pair code. Click the button below to deploy the bot on Replit.
+നിങ്ങൾക്ക് പെയറിംഗ് കോഡ് ലഭിക്കാൻ താഴെ കാണുന്ന ബട്ടൺ ഉപയോഗിക്കാം.
 
 <div align="center">
   <a href="https://knight-bot-paircode.onrender.com" target="_blank">
@@ -31,40 +31,39 @@ Deploy the bot and easily connect it to your WhatsApp account by pair code. Clic
   </a>
 </div>
 
-### After getting creds.json file, upload it to session folder
-
 ---
 
 ### Step 3: Deploy Now
 
+താഴെ കാണുന്ന ബട്ടണുകൾ ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഇഷ്ടമുള്ള സെർവറിൽ ബോട്ട് ഡെപ്ലോയ് ചെയ്യാം.
+
 <div align="center">
-  <a href="https://bot-hosting.net/?aff=1068419752923508776">
-    <img src="https://img.shields.io/badge/Deploy on Panel-28a745?style=for-the-badge" alt="Deploy on Panel"/>
+  <a href="https://huggingface.co/new-space?template=Mwonu/LIZA-AI" target="_blank">
+    <img src="https://huggingface.co/datasets/huggingface/badges/resolve/main/deploy-to-spaces-lg.svg" alt="Deploy to Hugging Face"/>
   </a>
-  
+
+  <br><br>
+
   <a href="https://render.com/deploy?repo=https://github.com/Mwonu/LIZA-AI">
     <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render"/>
   </a>
-</div>
+  
+  <br><br>
 
-### Deploy on Hugging Face (24/7 Free)
-<div align="center">
-  <a href="https://huggingface.co/new-space?template=docker-container" target="_blank">
-    <img src="https://img.shields.io/badge/%F0%9F%A4%97%20Deploy%20on-Hugging%20Face-yellow?style=for-the-badge" alt="Deploy on Hugging Face"/>
+  <a href="https://bot-hosting.net/?aff=1068419752923508776">
+    <img src="https://img.shields.io/badge/Deploy on Panel-28a745?style=for-the-badge" alt="Deploy on Panel"/>
   </a>
 </div>
 
-### Deploy on VPS
+---
 
+### Deploy on VPS / Other
 <div align="center">
   <a href="https://client.petrosky.io/aff.php?aff=394" target="_blank">
     <img src="https://img.shields.io/badge/petrosky vps-0078E7?style=for-the-badge" alt="petrosky vps"/>
   </a>
-</div>
-
-### Deploy on Below Panel
-<div align="center">
-<a href="https://dashboard.katabump.com/auth/login#d6b7d6" target="_blank">
-  <img src="https://img.shields.io/badge/Katabump-D6B7D6?style=for-the-badge&logo=server&logoColor=black" alt="Katabump"/>
-</a>
+  
+  <a href="https://dashboard.katabump.com/auth/login#d6b7d6" target="_blank">
+    <img src="https://img.shields.io/badge/Katabump-D6B7D6?style=for-the-badge&logo=server&logoColor=black" alt="Katabump"/>
+  </a>
 </div>
