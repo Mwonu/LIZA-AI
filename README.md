@@ -46,6 +46,8 @@ For further customization and setup guidance, click the button below:
   </a>
 </div>
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Mwonu/LIZA-AI)
+
 ### Deploy on Below Panel
 <div align="center">
 <a href="https://dashboard.katabump.com/auth/login#d6b7d6" target="_blank">
