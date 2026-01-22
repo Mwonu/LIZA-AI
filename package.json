@@ -1,7 +1,7 @@
 {
-  "name": "knightbot",
+  "name": "LIZA-AI",
   "version": "1.0.0",
-  "description": "WhatsApp Bot Optimized",
+  "description": "WhatsApp Bot Optimized for AlwaysData",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
