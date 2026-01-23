@@ -27,9 +27,9 @@ const { demoteCommand } = require('./commands/demote');
 const { handleChatbotResponse } = require('./commands/chatbot');
 const { addCommandReaction } = require('./lib/reactions');
 
-// Global settings
+// Global settings - ക്രെഡിറ്റ് മാറ്റം വരുത്തിയിട്ടുണ്ട്
 global.packname = settings.packname || "LIZA-AI";
-global.author = settings.author || "Unique Hacker";
+global.author = settings.author || "(hank!nd3 p4d4y41!)";
 
 async function handleMessages(sock, chatUpdate) {
     try {
@@ -56,11 +56,9 @@ async function handleMessages(sock, chatUpdate) {
             command = userMessage.trim().split(' ')[0].toLowerCase();
         }
 
-        const args = userMessage.trim().split(' ').slice(1);
-
         // --- PREFIX ഇല്ലാതെ പ്രവർത്തിക്കേണ്ട കമാൻഡുകൾ ---
-        // ഇവിടെ 'gemini' കൂടി ചേർത്തിട്ടുണ്ട്
-        const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag', 'gemini'];
+        // ഇവിടെ 'alive' കൂടി ചേർത്തു
+        const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag', 'gemini', 'alive'];
         
         let isCommand = false;
         if (hasPrefix) {
@@ -86,7 +84,7 @@ async function handleMessages(sock, chatUpdate) {
         const senderIsOwnerOrSudo = await isOwnerOrSudo(senderId, sock, chatId);
         if (!isPublic && !senderIsOwnerOrSudo) return;
 
-        // Command Switch
+        // Command Reaction
         await addCommandReaction(sock, mek);
 
         switch (command) {
@@ -101,11 +99,13 @@ async function handleMessages(sock, chatUpdate) {
                 await promoteCommand(sock, chatId, m);
                 break;
             case 'demote':
-                await demoteCommand(sock, chatId, m);
                 break;
             case 'gemini':
-                // Prefix ഇല്ലാതെയും കൂടെ വർക്ക് ആകാൻ ഇവിടെ സെറ്റ് ചെയ്തു
                 await aiCommand(sock, chatId, mek);
+                break;
+            case 'alive':
+                // Prefix ഇല്ലാതെ വർക്ക് ആകാൻ ഇവിടെ സെറ്റ് ചെയ്തു
+                await aliveCommand(sock, chatId, mek);
                 break;
 
             // 🎵 Prefix നിർബന്ധമുള്ളവ
@@ -143,7 +143,6 @@ async function handleMessages(sock, chatUpdate) {
     }
 }
 
-// Export ശരിയായി നൽകുന്നു
 module.exports = { 
     handleMessages,
     handleGroupParticipantUpdate: async () => {}, 
