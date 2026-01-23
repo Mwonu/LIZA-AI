@@ -1,6 +1,6 @@
 /**
  * - A WhatsApp Bot (LIZA-AI)
- * Optimized for AlwaysData Deployment
+ * Optimized for Railway Deployment
  */
 require('./settings')
 const { Boom } = require('@hapi/boom')
@@ -33,13 +33,12 @@ const NodeCache = require("node-cache")
 const pino = require("pino")
 const readline = require("readline")
 
-// --- ALWAYSDATA/HUGGING FACE PORT BINDING ---
+// --- RAILWAY PORT BINDING ---
 const express = require('express');
 const app = express();
-// AlwaysData-യ്ക്ക് 8100 അല്ലെങ്കിൽ process.env.PORT ആവശ്യമാണ്
-const port = process.env.PORT || 8100; 
+const port = process.env.PORT || 3000; 
 
-app.get('/', (req, res) => { res.send('LIZA-AI is Running Successfully on AlwaysData!'); });
+app.get('/', (req, res) => { res.send('LIZA-AI is Running Successfully!'); });
 app.listen(port, "0.0.0.0", () => { 
     console.log(chalk.green(`🌐 Server active on port ${port}`)); 
 });
@@ -50,11 +49,11 @@ store.readFromFile()
 const settings = require('./settings')
 setInterval(() => store.writeToFile(), settings.storeWriteInterval || 10000)
 
-// Memory management optimized for free tiers
+// Memory management optimized
 setInterval(() => {
     const used = process.memoryUsage().rss / 1024 / 1024
-    if (used > 450) { // RAM limit set slightly higher for stability
-        console.log('⚠️ RAM limit reached, restarting to clear cache...');
+    if (used > 450) { 
+        console.log('⚠️ RAM limit reached, restarting...');
         process.exit(1)
     }
 }, 60_000)
@@ -63,7 +62,6 @@ async function startXeonBotInc() {
     try {
         if (!fs.existsSync('./session')) fs.mkdirSync('./session');
         
-        // SESSION_ID decoding logic
         if (!fs.existsSync('./session/creds.json') && process.env.SESSION_ID) {
             try {
                 const sessionData = process.env.SESSION_ID.includes('Session~') 
@@ -108,7 +106,7 @@ async function startXeonBotInc() {
             if (connection == "open") {
                 console.log(chalk.green(`🤖 Connected Successfully to WhatsApp!`))
                 const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
-                await XeonBotInc.sendMessage(botNumber, { text: `🤖 *LIZA-AI is Live!* \n\nYour bot is now running on AlwaysData.` });
+                await XeonBotInc.sendMessage(botNumber, { text: `🤖 *LIZA-AI is Live!* \n\nYour bot is now running on Railway.` });
             }
             if (connection === 'close') {
                 const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
