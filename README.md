@@ -24,7 +24,7 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 നിങ്ങൾക്ക് പെയറിംഗ് കോഡ് ലഭിക്കാൻ താഴെ കാണുന്ന ബട്ടൺ ഉപയോഗിക്കാം. അത് വഴി കിട്ടുന്ന സെഷൻ ഐഡി കോപ്പി ചെയ്യുക.
 
 <div align="center">
-  <a href="https://knight-bot-paircode.onrender.com" target="_blank">
+  <a href="https://replit.com/@fayasmonu24620/LIZA-PAIR-V1?s=app" target="_blank">
     <img src="https://img.shields.io/badge/GET%20SESSION%20ID-Easy%20Method-ff4d4d?style=for-the-badge" alt="Generate Session ID"/>
   </a>
 </div>
