@@ -1,5 +1,5 @@
 /// Copyright @(hank!nd3 p4d4y41!
-const settings = require("../settings");
+const settings = ('../config');
 async function aliveCommand(sock, chatId, message) {
     try {
         const message1 = `*Bot is Active!*\n\n` +
