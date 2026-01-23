@@ -1,15 +1,12 @@
-// 🧹 Temp storage cleanup logic
+//  Temp storage cleanup logic
 const fs = require('fs');
 const path = require('path');
 const customTemp = path.join(process.cwd(), 'temp');
 if (!fs.existsSync(customTemp)) fs.mkdirSync(customTemp, { recursive: true });
 
 const settings = require('./config'); 
-const { isBanned } = require('./lib/isBanned');
 const { smsg } = require('./lib/myfunc');
-const { isSudo } = require('./lib/index');
 const isOwnerOrSudo = require('./lib/isOwner');
-const isAdmin = require('./lib/isAdmin');
 
 // Command imports
 const helpCommand = require('./commands/help');
@@ -34,8 +31,11 @@ global.author = settings.author || "(hank!nd3 p4d4y41!)";
 async function handleMessages(sock, chatUpdate) {
     try {
         const mek = chatUpdate.messages[0];
-        if (!mek.message) return;
+        if (!mek || !mek.message) return;
         
+        // Status മെസ്സേജുകൾ ഒഴിവാക്കാൻ
+        if (mek.key && mek.key.remoteJid === 'status@broadcast') return;
+
         const m = smsg(sock, mek);
         const chatId = m.chat;
         const senderId = m.sender;
@@ -43,7 +43,7 @@ async function handleMessages(sock, chatUpdate) {
 
         const userMessage = (m.body || '').trim();
         const prefix = settings.PREFIX || '.';
-        const prefixMode = settings.PREFIX_MODE || 'hybrid'; // Config-ൽ നിന്നുള്ള മോഡ് എടുക്കുന്നു
+        const prefixMode = settings.PREFIX_MODE || 'hybrid';
         
         const hasPrefix = userMessage.startsWith(prefix);
         
@@ -65,8 +65,7 @@ async function handleMessages(sock, chatUpdate) {
                 isCommand = true;
             } else {
                 command = userMessage.trim().split(' ')[0].toLowerCase();
-                // ഹൈബ്രിഡ് മോഡിൽ പ്രിഫിക്സ് ഇല്ലാതെ വർക്ക് ആകേണ്ടവ ഇവിടെ ചേർക്കാം
-                const noPrefixList = ['menu', 'help', 'alive', 'gemini', 'ai', 'ping'];
+                const noPrefixList = ['menu', 'help', 'alive', 'ai', 'ping', 'gemini'];
                 if (noPrefixList.includes(command)) isCommand = true;
             }
         }
@@ -76,6 +75,7 @@ async function handleMessages(sock, chatUpdate) {
             return;
         }
 
+        // Public/Private check
         let isPublic = true;
         try {
             if (fs.existsSync('./data/messageCount.json')) {
@@ -87,12 +87,35 @@ async function handleMessages(sock, chatUpdate) {
         const senderIsOwnerOrSudo = await isOwnerOrSudo(senderId, sock, chatId);
         if (!isPublic && !senderIsOwnerOrSudo) return;
 
+        // Reaction ആഡ് ചെയ്യുന്നു
         await addCommandReaction(sock, mek);
 
+        // --- കമാൻഡ് സ്വിച്ച് ലോജിക് ---
         switch (command) {
             case 'menu':
             case 'help':
                 await helpCommand(sock, chatId, m);
+                break;
+            case 'alive':
+                await aliveCommand(sock, chatId, m);
+                break;
+            case 'ping':
+                await pingCommand(sock, chatId, m);
+                break;
+            case 'gemini':
+            case 'ai':
+                await aiCommand(sock, chatId, m);
+                break;
+            case 'sticker':
+            case 's':
+                await stickerCommand(sock, chatId, m);
+                break;
+            case 'song':
+            case 'play':
+                await songCommand(sock, chatId, m);
+                break;
+            case 'video':
+                await videoCommand(sock, chatId, m);
                 break;
             case 'tagall':
                 await tagAllCommand(sock, chatId, m);
@@ -106,28 +129,9 @@ async function handleMessages(sock, chatUpdate) {
             case 'demote':
                 await demoteCommand(sock, chatId, m);
                 break;
-            case 'gemini':
-            case 'ai':
-                await aiCommand(sock, chatId, m);
-                break;
-            case 'alive':
-                await aliveCommand(sock, chatId, m);
-                break;
-            case 'song':
-            case 'play':
-                await songCommand(sock, chatId, m);
-                break;
-            case 'sticker':
-            case 's':
-                await stickerCommand(sock, chatId, m);
-                break;
-            case 'ping':
-                await pingCommand(sock, chatId, m);
-                break;
             case 'owner':
                 await ownerCommand(sock, chatId);
                 break;
-            
             default:
                 break;
         }
