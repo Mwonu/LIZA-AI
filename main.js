@@ -41,8 +41,8 @@ async function handleMessages(sock, chatUpdate) {
         const senderId = m.sender;
         const isGroup = m.isGroup;
 
-        // മിക്കപ്പോഴും m.body ശൂന്യമാകുന്നത് കൊണ്ടാണ് കമാൻഡ് വർക്ക് ആകാത്തത്
-        const userMessage = (m.body || m.text || '').trim();
+        // 🛠️ കൂടുതൽ സ്റ്റേബിൾ ആയ മെസ്സേജ് ഡിറ്റക്ഷൻ
+        const userMessage = (m.body || m.text || (m.msg && m.msg.caption) || (m.msg && m.msg.text) || '').trim();
         const prefix = settings.PREFIX || '.';
         const prefixMode = settings.PREFIX_MODE || 'hybrid';
         
@@ -66,6 +66,7 @@ async function handleMessages(sock, chatUpdate) {
                 isCommand = true;
             } else {
                 command = userMessage.trim().split(' ')[0].toLowerCase();
+                // ഹൈബ്രിഡ് മോഡിൽ പ്രിഫിക്സ് ഇല്ലാതെ വർക്ക് ആകേണ്ട കമാൻഡുകൾ
                 const noPrefixList = ['menu', 'help', 'alive', 'ai', 'ping', 'gemini'];
                 if (noPrefixList.includes(command)) isCommand = true;
             }
@@ -76,14 +77,15 @@ async function handleMessages(sock, chatUpdate) {
             return;
         }
 
-        // ലോഗ് ചെക്ക് - കമാൻഡ് തിരിച്ചറിയുന്നുണ്ടോ എന്ന് റെയിൽവേയിൽ നോക്കാം
-        console.log(`[COMMAND] ${command} from ${senderId}`);
+        // 📝 ലോഗ് ചെക്ക് - റെയിൽവേ ലോഗിൽ ഇത് കാണാൻ സാധിക്കും
+        console.log(chalk.greenBright(`[COMMAND] ${command} | From: ${senderId} | Group: ${isGroup}`));
 
         // Public/Private check
         let isPublic = true;
         try {
-            if (fs.existsSync('./data/messageCount.json')) {
-                const data = JSON.parse(fs.readFileSync('./data/messageCount.json'));
+            const statusPath = './data/messageCount.json';
+            if (fs.existsSync(statusPath)) {
+                const data = JSON.parse(fs.readFileSync(statusPath));
                 if (typeof data.isPublic === 'boolean') isPublic = data.isPublic;
             }
         } catch (e) { isPublic = true; }
