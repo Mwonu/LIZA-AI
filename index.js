@@ -2,7 +2,7 @@
  * - A WhatsApp Bot (LIZA-AI)
  * Optimized for Railway Deployment
  */
-require('./config') // settings എന്നതിന് പകരം config എന്ന് മാറ്റി
+require('./config') 
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
 const chalk = require('chalk')
@@ -43,20 +43,10 @@ app.listen(port, "0.0.0.0", () => {
     console.log(chalk.green(`🌐 Server active on port ${port}`)); 
 });
 
-// Import lightweight store
 const store = require('./lib/lightweight_store')
 store.readFromFile()
-const settings = require('./config') // settings എന്നതിന് പകരം config എന്ന് മാറ്റി
+const settings = require('./config') 
 setInterval(() => store.writeToFile(), settings.storeWriteInterval || 10000)
-
-// Memory management optimized
-setInterval(() => {
-    const used = process.memoryUsage().rss / 1024 / 1024
-    if (used > 450) { 
-        console.log('⚠️ RAM limit reached, restarting...');
-        process.exit(1)
-    }
-}, 60_000)
 
 async function startXeonBotInc() {
     try {
@@ -84,7 +74,7 @@ async function startXeonBotInc() {
             version,
             logger: pino({ level: 'silent' }),
             printQRInTerminal: !process.env.SESSION_ID,
-            browser: ["Ubuntu", "Chrome", "20.0.04"],
+            browser: ["LIZA-AI", "Chrome", "1.0.0"],
             auth: {
                 creds: state.creds,
                 keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" })),
@@ -117,24 +107,40 @@ async function startXeonBotInc() {
             }
         })
 
+        // മെസേജുകൾ കൈകാര്യം ചെയ്യുന്ന ഭാഗം തിരുത്തിയത്
         XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
             try {
                 const mek = chatUpdate.messages[0]
                 if (!mek.message) return
+                
+                // മുകളിൽ ഇംപോർട്ട് ചെയ്ത smsg ഉപയോഗിച്ച് മെസേജ് ശരിയാക്കുന്നു
+                const m = smsg(XeonBotInc, mek, store)
+                
                 if (mek.key && mek.key.remoteJid === 'status@broadcast') {
                     await handleStatus(XeonBotInc, chatUpdate);
                     return;
                 }
-                await handleMessages(XeonBotInc, chatUpdate, true)
+                
+                // കമാൻഡുകൾ മെയിൻ ഫയലിലേക്ക് അയക്കുന്നു
+                await handleMessages(XeonBotInc, chatUpdate)
             } catch (err) {
-                console.error(err)
+                console.error('Error in upsert:', err)
             }
         })
 
-        // റെയിൽവേയിലെ MODE അനുസരിച്ച് പബ്ലിക്/പ്രൈവറ്റ് സെറ്റ് ചെയ്യുന്നു
+        XeonBotInc.ev.on('group-participants.update', async (anu) => {
+            await handleGroupParticipantUpdate(XeonBotInc, anu)
+        })
+
+        XeonBotInc.decodeJid = (jid) => {
+            if (!jid) return jid
+            if (/:\d+@/gi.test(jid)) {
+                let decode = jidDecode(jid) || {}
+                return decode.user && decode.server && decode.user + '@' + decode.server || jid
+            } else return jid
+        }
+
         XeonBotInc.public = settings.MODE === 'public' ? true : false
-        
-        XeonBotInc.serializeM = (m) => smsg(XeonBotInc, m, store)
 
         return XeonBotInc
     } catch (error) {
