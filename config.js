@@ -28,11 +28,15 @@ global.APIKeys = {
     'https://api-fgmods.ddns.net': 'fg-dylux'
 };
 
+// ഇവിടെയാണ് മാറ്റങ്ങൾ വരുത്തിയിരിക്കുന്നത്
 module.exports = {
-    SESSION_ID: process.env.SESSION_ID || '', // റെയിൽവേയിലെ സെഷൻ ഐഡി ഇവിടെ എടുക്കും
+    SESSION_ID: process.env.SESSION_ID || '', 
     OWNER_NUMBER: global.owner,
+    ownerNumber: global.owner, // മറ്റു ഫയലുകൾക്ക് വേണ്ടിയുള്ളത്
     PREFIX: global.prefix,
+    prefix: global.prefix,     // മറ്റു ഫയലുകൾക്ക് വേണ്ടിയുള്ളത്
     MODE: global.mode,
+    mode: global.mode,         // മറ്റു ഫയലുകൾക്ക് വേണ്ടിയുള്ളത്
     WARN_COUNT: 3,
     APIs: global.APIs,
     APIKeys: global.APIKeys
