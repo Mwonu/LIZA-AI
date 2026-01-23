@@ -5,7 +5,8 @@ const path = require('path');
 
 async function helpCommand(sock, chatId, message) {
     try {
-        const userMessage = (message.body || '').trim();
+        // m.body ലഭിച്ചില്ലെങ്കിൽ m.text അല്ലെങ്കിൽ message.message നോക്കുന്നു
+        const userMessage = (message.body || message.text || '').trim();
         const args = userMessage.split(' ');
         
         const header = `L I Z A  —  A I  ✅\n_v 3.0.0_  •  (hank!nd3 p4d4y41!)\n\n`;
@@ -33,7 +34,21 @@ async function helpCommand(sock, chatId, message) {
             subMenu += `G E N E R A L\n\n• ping\n• alive\n• owner\n• joke\n• quote\n• weather\n• news\n• lyrics\n• groupinfo\n• staff\n• trt`;
         } else if (choice === '02' || choice === '2') {
             subMenu += `G R O U P\n\n• ban\n• promote\n• demote\n• mute\n• unmute\n• kick\n• warn\n• antilink\n• chatbot\n• tagall\n• hidetag\n• welcome`;
-        } // ... മറ്റ് സെക്ഷനുകൾ മാറ്റമില്ലാതെ തുടരും
+        } else if (choice === '03' || choice === '3') {
+            subMenu += `A I  T O O L S\n\n• gemini\n• gpt\n• imagine\n• flux\n• sora`;
+        } else if (choice === '04' || choice === '4') {
+            subMenu += `D O W N L O A D S\n\n• play\n• song\n• spotify\n• instagram\n• facebook\n• tiktok\n• video`;
+        } else if (choice === '05' || choice === '5') {
+            subMenu += `I M A G E S\n\n• sticker\n• blur\n• simage\n• removebg\n• remini\n• meme\n• emojimix`;
+        } else if (choice === '06' || choice === '6') {
+            subMenu += `F U N  &  G A M E S\n\n• tictactoe\n• truth\n• dare\n• flirting\n• shayari\n• ship\n• wasted\n• anime`;
+        } else if (choice === '07' || choice === '7') {
+            subMenu += `T E X T  M A K E R\n\n• neon\n• matrix\n• glitch\n• ice\n• fire\n• hacker\n• sand\n• purple`;
+        } else if (choice === '08' || choice === '8') {
+            subMenu += `O W N E R\n\n• mode\n• update\n• clearsession\n• antidelete\n• setpp\n• pmblocker`;
+        } else {
+            return await sock.sendMessage(chatId, { text: "_Section not found!_" }, { quoted: message });
+        }
 
         return await sendMenu(sock, chatId, subMenu, message);
 
@@ -43,7 +58,7 @@ async function helpCommand(sock, chatId, message) {
 }
 
 async function sendMenu(sock, chatId, text, quoted) {
-    // 🖼️ പാത്ത് കൃത്യമാണെന്ന് ഉറപ്പാക്കാൻ process.cwd() ഉപയോഗിക്കുന്നു
+    // 🖼️ കൂടുതൽ സുരക്ഷിതമായ ഫയൽ പാത്ത്
     const imagePath = path.join(process.cwd(), 'assets', 'bot_image.png');
     const channelLink = "https://whatsapp.com/channel/0029VbC31l07NoZrfZOPZu1z";
 
@@ -53,7 +68,7 @@ async function sendMenu(sock, chatId, text, quoted) {
             imageBuffer = fs.readFileSync(imagePath);
         }
     } catch (e) {
-        console.log("Image load error:", e);
+        console.log("Image load error in Menu:", e);
     }
 
     const contextInfo = {
@@ -67,7 +82,7 @@ async function sendMenu(sock, chatId, text, quoted) {
         externalAdReply: {
             title: "L I Z A  —  A I  ✅",
             body: "Verified Official Menu",
-            thumbnail: imageBuffer,
+            thumbnail: imageBuffer || null,
             sourceUrl: channelLink,
             mediaType: 1,
             renderLargerThumbnail: true,
@@ -82,6 +97,7 @@ async function sendMenu(sock, chatId, text, quoted) {
             contextInfo 
         }, { quoted });
     } else {
+        // ഇമേജ് ലോഡ് ആയില്ലെങ്കിലും മെനു മെസ്സേജ് അയക്കും
         return await sock.sendMessage(chatId, { text, contextInfo }, { quoted });
     }
 }
