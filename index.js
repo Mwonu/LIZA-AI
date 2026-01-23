@@ -111,4 +111,37 @@ async function startXeonBotInc() {
             if (connection === 'close') {
                 const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
                 if (shouldReconnect) {
-                    console.log(chalk
+                    console.log(chalk.red('❌ Connection lost. Reconnecting...'))
+                    startXeonBotInc()
+                }
+            }
+        })
+
+        XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
+            try {
+                const mek = chatUpdate.messages[0]
+                if (!mek.message) return
+                if (mek.key && mek.key.remoteJid === 'status@broadcast') {
+                    await handleStatus(XeonBotInc, chatUpdate);
+                    return;
+                }
+                await handleMessages(XeonBotInc, chatUpdate, true)
+            } catch (err) {
+                console.error(err)
+            }
+        })
+
+        // റെയിൽവേയിലെ MODE അനുസരിച്ച് പബ്ലിക്/പ്രൈവറ്റ് സെറ്റ് ചെയ്യുന്നു
+        XeonBotInc.public = settings.MODE === 'public' ? true : false
+        
+        XeonBotInc.serializeM = (m) => smsg(XeonBotInc, m, store)
+
+        return XeonBotInc
+    } catch (error) {
+        console.error('Fatal Error:', error)
+        await delay(5000)
+        startXeonBotInc()
+    }
+}
+
+startXeonBotInc()
