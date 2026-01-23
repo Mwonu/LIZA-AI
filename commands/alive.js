@@ -1,9 +1,8 @@
 /// Copyright @(hank!nd3 p4d4y41!
 const os = require('os');
-const settings = require('../config');
 
 /**
- * സെക്കന്റുകളെ മണിക്കൂർ/മിനിറ്റ് രൂപത്തിലേക്ക് മാറ്റുന്നു
+ * Uptime കണക്കാക്കാനുള്ള ഫങ്ക്ഷൻ
  */
 function runtime(seconds) {
     seconds = Number(seconds);
@@ -22,7 +21,6 @@ async function aliveCommand(sock, chatId, message) {
     try {
         const uptime = runtime(process.uptime());
         const ramUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
-        const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
         
         const aliveMsg = `╭───────────────┈⊷
 │ 🤖 *LIZA-AI IS ONLINE*
@@ -30,37 +28,31 @@ async function aliveCommand(sock, chatId, message) {
 │
 │ 👤 *Developer:* (hank!nd3 p4d4y41!)
 │ ⏳ *Uptime:* ${uptime}
-│ 📟 *RAM:* ${ramUsage}MB / ${totalRam}GB
-│ 📡 *Status:* Connected
+│ 📟 *RAM:* ${ramUsage}MB
+│ 📡 *Status:* Active
 │ 🛠️ *Version:* 2.0.0
 │
 ╰───────────────┈⊷
-      *Type .menu to see all commands*`;
+      *Type .menu for more*`;
 
         await sock.sendMessage(chatId, {
             text: aliveMsg,
             contextInfo: {
                 externalAdReply: {
-                    title: "LIZA-AI MD STATUS",
-                    body: "Smart WhatsApp Assistant",
-                    thumbnailUrl: "https://telegra.ph/file/your-image-link.jpg", // ഇവിടെ നിങ്ങളുടെ ലോഗോ ലിങ്ക് നൽകാം
+                    title: "LIZA-AI STATUS",
+                    body: "Online & Ready",
+                    thumbnailUrl: "https://telegra.ph/file/your-image-link.jpg",
                     sourceUrl: "https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A",
                     mediaType: 1,
                     renderLargerThumbnail: true
                 },
                 forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363161513685998@newsletter',
-                    newsletterName: 'LIZA-AI (hank!nd3 p4d4y41!)',
-                    serverMessageId: -1
-                }
+                isForwarded: true
             }
         }, { quoted: message });
 
     } catch (error) {
         console.error('Error in alive command:', error);
-        await sock.sendMessage(chatId, { text: '🤖 LIZA-AI is alive and running!' }, { quoted: message });
     }
 }
 
