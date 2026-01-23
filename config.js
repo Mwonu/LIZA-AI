@@ -1,9 +1,17 @@
 require('dotenv').config();
 
 // ബോട്ടിന്റെ പ്രധാന സെറ്റിംഗ്സ്
-global.owner = process.env.OWNER_NUMBER || '91XXXXXXXXXX'; // നിങ്ങളുടെ നമ്പർ ഇവിടെ വരും
-global.prefix = process.env.PREFIX || '.'; // ബോട്ട് കമാൻഡ് തുടങ്ങേണ്ട ചിഹ്നം
-global.mode = process.env.MODE || 'public'; // ബോട്ട് പബ്ലിക് ആണോ പ്രൈവറ്റ് ആണോ എന്ന്
+global.owner = process.env.OWNER_NUMBER || '91XXXXXXXXXX'; 
+global.prefix = process.env.PREFIX || '.'; 
+global.mode = process.env.MODE || 'public'; 
+
+/**
+ * PREFIX_MODE സെറ്റിംഗ്സ്:
+ * 'hybrid'    - Prefix ഉപയോഗിച്ചും ഇല്ലാതെയും കമാൻഡ് വർക്ക് ആകും (ഉദാ: .menu, menu)
+ * 'prefix'    - Prefix ഉണ്ടെങ്കിൽ മാത്രമേ വർക്ക് ആകൂ (ഉദാ: .menu മാത്രം)
+ * 'no-prefix' - Prefix ഇല്ലാതെ മാത്രമേ വർക്ക് ആകൂ (ഉദാ: menu മാത്രം)
+ */
+global.prefix_mode = process.env.PREFIX_MODE || 'hybrid'; 
 
 global.APIs = {
     xteam: 'https://api.xteam.xyz',
@@ -28,16 +36,18 @@ global.APIKeys = {
     'https://api-fgmods.ddns.net': 'fg-dylux'
 };
 
-// ഇവിടെയാണ് മാറ്റങ്ങൾ വരുത്തിയിരിക്കുന്നത്
 module.exports = {
     SESSION_ID: process.env.SESSION_ID || '', 
     OWNER_NUMBER: global.owner,
-    ownerNumber: global.owner, // മറ്റു ഫയലുകൾക്ക് വേണ്ടിയുള്ളത്
+    ownerNumber: global.owner,
     PREFIX: global.prefix,
-    prefix: global.prefix,     // മറ്റു ഫയലുകൾക്ക് വേണ്ടിയുള്ളത്
+    prefix: global.prefix,
     MODE: global.mode,
-    mode: global.mode,         // മറ്റു ഫയലുകൾക്ക് വേണ്ടിയുള്ളത്
+    mode: global.mode,
+    PREFIX_MODE: global.prefix_mode, // പുതിയ മോഡ് ഇവിടെ ചേർത്തു
     WARN_COUNT: 3,
     APIs: global.APIs,
-    APIKeys: global.APIKeys
+    APIKeys: global.APIKeys,
+    packname: "LIZA-AI",
+    author: "(hank!nd3 p4d4y41!)"
 };
