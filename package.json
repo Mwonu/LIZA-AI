@@ -32,7 +32,12 @@
     "human-readable": "^0.2.1",
     "jimp": "^0.16.13",
     "lowdb": "^2.1.0",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.2",
+    "g-i-s": "^2.1.6",
+    "google-it": "^1.6.4",
+    "miniget": "^4.2.3",
+    "ytdl-core": "latest",
+    "form-data": "^4.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
