@@ -24,7 +24,7 @@ const tagAllCommand = require('./commands/tagall');
 const kickCommand = require('./commands/kick');
 const { promoteCommand } = require('./commands/promote');
 const { demoteCommand } = require('./commands/demote');
-const { handleChatbotResponse } = require('./commands/chatbot');
+const { handleChatbotResponse = () => {} } = require('./commands/chatbot'); // Default empty function if missing
 const { addCommandReaction } = require('./lib/reactions');
 
 // Global settings - ക്രെഡിറ്റ് മാറ്റം വരുത്തിയിട്ടുണ്ട്
@@ -57,7 +57,6 @@ async function handleMessages(sock, chatUpdate) {
         }
 
         // --- PREFIX ഇല്ലാതെ പ്രവർത്തിക്കേണ്ട കമാൻഡുകൾ ---
-        // ഇവിടെ 'alive' കൂടി ചേർത്തു
         const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag', 'gemini', 'alive'];
         
         let isCommand = false;
@@ -99,39 +98,40 @@ async function handleMessages(sock, chatUpdate) {
                 await promoteCommand(sock, chatId, m);
                 break;
             case 'demote':
+                await demoteCommand(sock, chatId, m);
                 break;
             case 'gemini':
-                await aiCommand(sock, chatId, mek);
+                await aiCommand(sock, chatId, m);
                 break;
             case 'alive':
-                // Prefix ഇല്ലാതെ വർക്ക് ആകാൻ ഇവിടെ സെറ്റ് ചെയ്തു
-                await aliveCommand(sock, chatId, mek);
+                await aliveCommand(sock, chatId, m);
                 break;
 
             // 🎵 Prefix നിർബന്ധമുള്ളവ
             case 'song':
             case 'play':
                 if (!hasPrefix) return; 
-                await songCommand(sock, chatId, mek);
+                await songCommand(sock, chatId, m);
                 break;
             case 'sticker':
             case 's':
                 if (!hasPrefix) return;
-                await stickerCommand(sock, chatId, mek);
+                await stickerCommand(sock, chatId, m);
                 break;
             case 'menu':
             case 'help':
-                await helpCommand(sock, chatId, mek, settings.LINK);
+                // ഇവിടെ 'm' പാസ്സ് ചെയ്യുന്നത് വഴി .menu 1 പോലുള്ള ആർഗ്യുമെന്റുകൾ helpCommand-ന് ലഭിക്കും
+                await helpCommand(sock, chatId, m);
                 break;
             case 'ping':
-                await pingCommand(sock, chatId, mek);
+                await pingCommand(sock, chatId, m);
                 break;
             case 'owner':
                 await ownerCommand(sock, chatId);
                 break;
             case 'ai':
                 if (!hasPrefix) return;
-                await aiCommand(sock, chatId, mek);
+                await aiCommand(sock, chatId, m);
                 break;
             
             default:
