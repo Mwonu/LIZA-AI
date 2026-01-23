@@ -1,106 +1,76 @@
 /// Copyright @(hank!nd3 p4d4y41!
 const axios = require('axios');
-const fetch = require('node-fetch');
 
 async function aiCommand(sock, chatId, message) {
     try {
-        const text = message.message?.conversation || message.message?.extendedTextMessage?.text;
-        
-        if (!text) {
-            return await sock.sendMessage(chatId, { 
-                text: "Please provide a question after .gpt or .gemini\n\nExample: .gpt write a basic html code"
-            }, {
-                quoted: message
-            });
-        }
+        const userMessage = (
+            message.message?.conversation ||
+            message.message?.extendedTextMessage?.text ||
+            message.message?.imageMessage?.caption ||
+            message.message?.videoMessage?.caption ||
+            ''
+        ).trim();
 
-        // Get the command and query
-        const parts = text.split(' ');
+        // കമാൻഡ് പേര് വേർതിരിക്കുന്നു (Prefix ഇല്ലാതെ വർക്ക് ആകാൻ)
+        const parts = userMessage.split(' ');
         const command = parts[0].toLowerCase();
         const query = parts.slice(1).join(' ').trim();
 
+        // കമാൻഡ് 'gemini' ആണോ എന്ന് നോക്കുന്നു (Prefix ഇല്ലാതെ)
+        if (command !== 'gemini') return;
+
         if (!query) {
             return await sock.sendMessage(chatId, { 
-                text: "Please provide a question after .gpt or .gemini"
-            }, {quoted:message});
+                text: "ഹലോ! ഞാൻ നിങ്ങളുടെ Gemini AI അസിസ്റ്റന്റ് ആണ്. എന്നോട് എന്തെങ്കിലും ചോദിക്കണമെങ്കിൽ കമാൻഡിനൊപ്പം ചോദ്യം കൂടി നൽകുക.\n\n*ഉദാഹരണത്തിന്:* gemini ലോകത്തിലെ ഏറ്റവും വലിയ രാജ്യം ഏതാണ്?"
+            }, { quoted: message });
         }
 
+        // Reaction - ചിന്തിക്കുന്നു എന്ന കാണിക്കാൻ
+        await sock.sendMessage(chatId, { react: { text: '🔍', key: message.key } });
+
         try {
-            // Show processing message
-            await sock.sendMessage(chatId, {
-                react: { text: '🤖', key: message.key }
-            });
+            const API_KEY = "AIzaSyBew1J5BUMYROrw713zqeTkFrL2g11aVII";
+            const response = await axios.post(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+                {
+                    contents: [{ parts: [{ text: query }] }]
+                }
+            );
 
-            if (command === '.gpt') {
-                // Call the GPT API
-                const response = await axios.get(`https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(query)}`);
+            if (response.data && response.data.candidates && response.data.candidates[0].content) {
+                const answer = response.data.candidates[0].content.parts[0].text;
                 
-                if (response.data && response.data.status && response.data.result) {
-                    const answer = response.data.result;
-                    await sock.sendMessage(chatId, {
-                        text: answer
-                    }, {
-                        quoted: message
-                    });
-                    
-                } else {
-                    throw new Error('Invalid response from API');
-                }
-            } else if (command === '.gemini') {
-                const apis = [
-                    `https://vapis.my.id/api/gemini?q=${encodeURIComponent(query)}`,
-                    `https://api.siputzx.my.id/api/ai/gemini-pro?content=${encodeURIComponent(query)}`,
-                    `https://api.ryzendesu.vip/api/ai/gemini?text=${encodeURIComponent(query)}`,
-                    `https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(query)}`,
-                    `https://api.giftedtech.my.id/api/ai/geminiai?apikey=gifted&q=${encodeURIComponent(query)}`,
-                    `https://api.giftedtech.my.id/api/ai/geminiaipro?apikey=gifted&q=${encodeURIComponent(query)}`
-                ];
+                // നിങ്ങളുടെ ബോട്ടിന്റെ ക്രെഡിറ്റ്സ് ചേർക്കുന്നു
+                const finalResponse = `🤖 *LIZA-AI GEMINI*\n\n${answer}\n\n*Powered by LIZA-AI*`;
 
-                for (const api of apis) {
-                    try {
-                        const response = await fetch(api);
-                        const data = await response.json();
-
-                        if (data.message || data.data || data.answer || data.result) {
-                            const answer = data.message || data.data || data.answer || data.result;
-                            await sock.sendMessage(chatId, {
-                                text: answer
-                            }, {
-                                quoted: message
-                            });
-                            
-                            return;
+                await sock.sendMessage(chatId, {
+                    text: finalResponse,
+                    contextInfo: {
+                        externalAdReply: {
+                            title: "LIZA-AI SMART ASSISTANT",
+                            body: "Gemini AI is active",
+                            thumbnailUrl: "https://telegra.ph/file/your-image-link.jpg", // നിങ്ങളുടെ ബോട്ടിന്റെ ലോഗോ ലിങ്ക് ഉണ്ടെങ്കിൽ ഇവിടെ നൽകാം
+                            sourceUrl: "https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A",
+                            mediaType: 1,
+                            renderLargerThumbnail: true
                         }
-                    } catch (e) {
-                        continue;
                     }
-                }
-                throw new Error('All Gemini APIs failed');
+                }, { quoted: message });
+
+                // വിജയിച്ചു എന്ന് കാണിക്കാൻ Reaction മാറ്റുന്നു
+                await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });
+
+            } else {
+                throw new Error('Invalid response from Gemini');
             }
+
         } catch (error) {
-            console.error('API Error:', error);
-            await sock.sendMessage(chatId, {
-                text: "❌ Failed to get response. Please try again later.",
-                contextInfo: {
-                    mentionedJid: [message.key.participant || message.key.remoteJid],
-                    quotedMessage: message.message
-                }
-            }, {
-                quoted: message
-            });
+            console.error('Gemini API Error:', error.response ? error.response.data : error.message);
+            await sock.sendMessage(chatId, { text: "❌ ക്ഷമിക്കണം, എനിക്ക് ഇപ്പോൾ മറുപടി നൽകാൻ കഴിയുന്നില്ല. പിന്നീട് ശ്രമിക്കൂ." }, { quoted: message });
         }
     } catch (error) {
         console.error('AI Command Error:', error);
-        await sock.sendMessage(chatId, {
-            text: "❌ An error occurred. Please try again later.",
-            contextInfo: {
-                mentionedJid: [message.key.participant || message.key.remoteJid],
-                quotedMessage: message.message
-            }
-        }, {
-            quoted: message
-        });
     }
 }
 
-module.exports = aiCommand; 
+module.exports = aiCommand;
