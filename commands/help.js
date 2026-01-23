@@ -1,4 +1,4 @@
-/// Copyright @(hank!nd3 p4d4y41!
+/// Copyright @(hank!nd3 p4d4y41!)
 const settings = require('../config');
 const fs = require('fs');
 const path = require('path');
@@ -60,19 +60,36 @@ async function helpCommand(sock, chatId, message) {
 }
 
 async function sendMenu(sock, chatId, text, quoted) {
-    const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+    // 🖼️ PNG പാത്ത് സെറ്റ് ചെയ്യുന്നു
+    const imagePath = path.join(__dirname, '../assets/bot_image.png');
+    const channelLink = "https://whatsapp.com/channel/0029VbC31l07NoZrfZOPZu1z";
+
     const contextInfo = {
-        forwardingScore: 1,
+        forwardingScore: 999,
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
             newsletterJid: '120363161513685998@newsletter',
             newsletterName: 'LIZA-AI ✅ (hank!nd3 p4d4y41!)',
             serverMessageId: -1
+        },
+        externalAdReply: {
+            title: "L I Z A  —  A I  ✅",
+            body: "Verified Official Menu",
+            thumbnail: fs.existsSync(imagePath) ? fs.readFileSync(imagePath) : null,
+            sourceUrl: channelLink, // നിങ്ങളുടെ ചാനൽ ലിങ്ക്
+            mediaType: 1,
+            renderLargerThumbnail: true,
+            showAdAttribution: true
         }
     };
 
+    // ഫോട്ടോ ഉണ്ടെങ്കിൽ അത് അയക്കും
     if (fs.existsSync(imagePath)) {
-        return await sock.sendMessage(chatId, { image: fs.readFileSync(imagePath), caption: text, contextInfo }, { quoted });
+        return await sock.sendMessage(chatId, { 
+            image: fs.readFileSync(imagePath), 
+            caption: text, 
+            contextInfo 
+        }, { quoted });
     } else {
         return await sock.sendMessage(chatId, { text, contextInfo }, { quoted });
     }
