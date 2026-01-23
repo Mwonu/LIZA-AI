@@ -6,32 +6,20 @@ require('./config')
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
 const chalk = require('chalk')
-const FileType = require('file-type')
 const path = require('path')
-const axios = require('axios')
 const { handleMessages, handleGroupParticipantUpdate, handleStatus } = require('./main');
-const PhoneNumber = require('awesome-phonenumber')
-const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./lib/exif')
-const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetch, await, sleep, reSize } = require('./lib/myfunc')
+const { smsg } = require('./lib/myfunc')
 const {
     default: makeWASocket,
     useMultiFileAuthState,
     DisconnectReason,
     fetchLatestBaileysVersion,
-    generateForwardMessageContent,
-    prepareWAMessageMedia,
-    generateWAMessageFromContent,
-    generateMessageID,
-    downloadContentFromMessage,
-    jidDecode,
-    proto,
-    jidNormalizedUser,
     makeCacheableSignalKeyStore,
+    jidDecode,
     delay
 } = require("@whiskeysockets/baileys")
 const NodeCache = require("node-cache")
 const pino = require("pino")
-const readline = require("readline")
 
 // --- RAILWAY PORT BINDING ---
 const express = require('express');
@@ -107,47 +95,8 @@ async function startXeonBotInc() {
             }
         })
 
-        // മെസേജുകൾ കൈകാര്യം ചെയ്യുന്ന ഭാഗം തിരുത്തിയത്
+        // മെസേജുകൾ അയക്കുന്ന ഭാഗം എറർ ഇല്ലാത്ത രീതിയിൽ തിരുത്തിയത്
         XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
             try {
                 const mek = chatUpdate.messages[0]
-                if (!mek.message) return
-                
-                // മുകളിൽ ഇംപോർട്ട് ചെയ്ത smsg ഉപയോഗിച്ച് മെസേജ് ശരിയാക്കുന്നു
-                const m = smsg(XeonBotInc, mek, store)
-                
-                if (mek.key && mek.key.remoteJid === 'status@broadcast') {
-                    await handleStatus(XeonBotInc, chatUpdate);
-                    return;
-                }
-                
-                // കമാൻഡുകൾ മെയിൻ ഫയലിലേക്ക് അയക്കുന്നു
-                await handleMessages(XeonBotInc, chatUpdate)
-            } catch (err) {
-                console.error('Error in upsert:', err)
-            }
-        })
-
-        XeonBotInc.ev.on('group-participants.update', async (anu) => {
-            await handleGroupParticipantUpdate(XeonBotInc, anu)
-        })
-
-        XeonBotInc.decodeJid = (jid) => {
-            if (!jid) return jid
-            if (/:\d+@/gi.test(jid)) {
-                let decode = jidDecode(jid) || {}
-                return decode.user && decode.server && decode.user + '@' + decode.server || jid
-            } else return jid
-        }
-
-        XeonBotInc.public = settings.MODE === 'public' ? true : false
-
-        return XeonBotInc
-    } catch (error) {
-        console.error('Fatal Error:', error)
-        await delay(5000)
-        startXeonBotInc()
-    }
-}
-
-startXeonBotInc()
+                if (!mek.message)
