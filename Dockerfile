@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:20-slim
 
 # സിസ്റ്റം പാക്കേജുകൾ ഇൻസ്റ്റാൾ ചെയ്യുന്നു
 RUN apt-get update && \
