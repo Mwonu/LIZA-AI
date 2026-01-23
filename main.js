@@ -24,10 +24,10 @@ const tagAllCommand = require('./commands/tagall');
 const kickCommand = require('./commands/kick');
 const { promoteCommand } = require('./commands/promote');
 const { demoteCommand } = require('./commands/demote');
-const { handleChatbotResponse = () => {} } = require('./commands/chatbot'); // Default empty function if missing
+const { handleChatbotResponse = () => {} } = require('./commands/chatbot');
 const { addCommandReaction } = require('./lib/reactions');
 
-// Global settings - ക്രെഡിറ്റ് മാറ്റം വരുത്തിയിട്ടുണ്ട്
+// Global settings - ക്രെഡിറ്റ് (hank!nd3 p4d4y41!)
 global.packname = settings.packname || "LIZA-AI";
 global.author = settings.author || "(hank!nd3 p4d4y41!)";
 
@@ -36,7 +36,6 @@ async function handleMessages(sock, chatUpdate) {
         const mek = chatUpdate.messages[0];
         if (!mek.message) return;
         
-        // Serialize message
         const m = smsg(sock, mek);
         const chatId = m.chat;
         const senderId = m.sender;
@@ -45,10 +44,8 @@ async function handleMessages(sock, chatUpdate) {
         const userMessage = (m.body || '').trim();
         const prefix = settings.PREFIX || '.';
         
-        // Prefix ഉണ്ടോ എന്ന് നോക്കുന്നു
         const hasPrefix = userMessage.startsWith(prefix);
         
-        // കമാൻഡ് കണ്ടെത്തുന്നു
         let command = '';
         if (hasPrefix) {
             command = userMessage.slice(prefix.length).trim().split(' ')[0].toLowerCase();
@@ -57,7 +54,8 @@ async function handleMessages(sock, chatUpdate) {
         }
 
         // --- PREFIX ഇല്ലാതെ പ്രവർത്തിക്കേണ്ട കമാൻഡുകൾ ---
-        const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag', 'gemini', 'alive'];
+        // ഇവിടെ 'menu' വും 'help' ഉം ചേർത്തു
+        const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag', 'gemini', 'alive', 'menu', 'help'];
         
         let isCommand = false;
         if (hasPrefix) {
@@ -71,7 +69,6 @@ async function handleMessages(sock, chatUpdate) {
             return;
         }
 
-        // Mode checking
         let isPublic = true;
         try {
             if (fs.existsSync('./data/messageCount.json')) {
@@ -83,11 +80,14 @@ async function handleMessages(sock, chatUpdate) {
         const senderIsOwnerOrSudo = await isOwnerOrSudo(senderId, sock, chatId);
         if (!isPublic && !senderIsOwnerOrSudo) return;
 
-        // Command Reaction
         await addCommandReaction(sock, mek);
 
         switch (command) {
-            // 🛑 Prefix ഇല്ലാതെ വർക്ക് ആകുന്നവ
+            // 🛑 Prefix ഇല്ലാതെയും കൂടെ വർക്ക് ആകുന്നവ
+            case 'menu':
+            case 'help':
+                await helpCommand(sock, chatId, m);
+                break;
             case 'tagall':
                 await tagAllCommand(sock, chatId, m);
                 break;
@@ -117,11 +117,6 @@ async function handleMessages(sock, chatUpdate) {
             case 's':
                 if (!hasPrefix) return;
                 await stickerCommand(sock, chatId, m);
-                break;
-            case 'menu':
-            case 'help':
-                // ഇവിടെ 'm' പാസ്സ് ചെയ്യുന്നത് വഴി .menu 1 പോലുള്ള ആർഗ്യുമെന്റുകൾ helpCommand-ന് ലഭിക്കും
-                await helpCommand(sock, chatId, m);
                 break;
             case 'ping':
                 await pingCommand(sock, chatId, m);
