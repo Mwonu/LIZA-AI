@@ -28,8 +28,8 @@ const { handleChatbotResponse } = require('./commands/chatbot');
 const { addCommandReaction } = require('./lib/reactions');
 
 // Global settings
-global.packname = settings.packname || "നിങ്ങളുടെ ബോട്ട് പേര്";
-global.author = settings.author || "നിങ്ങളുടെ പേര്";
+global.packname = settings.packname || "LIZA-AI";
+global.author = settings.author || "Unique Hacker";
 
 async function handleMessages(sock, chatUpdate) {
     try {
@@ -59,7 +59,8 @@ async function handleMessages(sock, chatUpdate) {
         const args = userMessage.trim().split(' ').slice(1);
 
         // --- PREFIX ഇല്ലാതെ പ്രവർത്തിക്കേണ്ട കമാൻഡുകൾ ---
-        const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag'];
+        // ഇവിടെ 'gemini' കൂടി ചേർത്തിട്ടുണ്ട്
+        const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag', 'gemini'];
         
         let isCommand = false;
         if (hasPrefix) {
@@ -102,6 +103,10 @@ async function handleMessages(sock, chatUpdate) {
             case 'demote':
                 await demoteCommand(sock, chatId, m);
                 break;
+            case 'gemini':
+                // Prefix ഇല്ലാതെയും കൂടെ വർക്ക് ആകാൻ ഇവിടെ സെറ്റ് ചെയ്തു
+                await aiCommand(sock, chatId, mek);
+                break;
 
             // 🎵 Prefix നിർബന്ധമുള്ളവ
             case 'song':
@@ -138,9 +143,9 @@ async function handleMessages(sock, chatUpdate) {
     }
 }
 
-// പ്രധാനപ്പെട്ട ഭാഗം: Export ശരിയായി നൽകുന്നു
+// Export ശരിയായി നൽകുന്നു
 module.exports = { 
     handleMessages,
-    handleGroupParticipantUpdate: async () => {}, // തൽക്കാലം കാലിയായി വിടുന്നു
+    handleGroupParticipantUpdate: async () => {}, 
     handleStatus: async () => {} 
 };
