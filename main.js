@@ -43,25 +43,32 @@ async function handleMessages(sock, chatUpdate) {
 
         const userMessage = (m.body || '').trim();
         const prefix = settings.PREFIX || '.';
+        const prefixMode = settings.PREFIX_MODE || 'hybrid'; // Config-ൽ നിന്നുള്ള മോഡ് എടുക്കുന്നു
         
         const hasPrefix = userMessage.startsWith(prefix);
         
         let command = '';
-        if (hasPrefix) {
-            command = userMessage.slice(prefix.length).trim().split(' ')[0].toLowerCase();
-        } else {
-            command = userMessage.trim().split(' ')[0].toLowerCase();
-        }
-
-        // --- PREFIX ഇല്ലാതെ പ്രവർത്തിക്കേണ്ട കമാൻഡുകൾ ---
-        // ഇവിടെ 'menu' വും 'help' ഉം ചേർത്തു
-        const noPrefixCommands = ['tagall', 'kick', 'promote', 'demote', 'mute', 'unmute', 'hidetag', 'gemini', 'alive', 'menu', 'help'];
-        
         let isCommand = false;
-        if (hasPrefix) {
-            isCommand = true; 
-        } else if (noPrefixCommands.includes(command)) {
-            isCommand = true; 
+
+        // --- ഡിനാമിക് പ്രിഫിക്സ് ലോജിക് ---
+        if (prefixMode === 'prefix') {
+            if (hasPrefix) {
+                command = userMessage.slice(prefix.length).trim().split(' ')[0].toLowerCase();
+                isCommand = true;
+            }
+        } else if (prefixMode === 'no-prefix') {
+            command = userMessage.trim().split(' ')[0].toLowerCase();
+            isCommand = true;
+        } else if (prefixMode === 'hybrid') {
+            if (hasPrefix) {
+                command = userMessage.slice(prefix.length).trim().split(' ')[0].toLowerCase();
+                isCommand = true;
+            } else {
+                command = userMessage.trim().split(' ')[0].toLowerCase();
+                // ഹൈബ്രിഡ് മോഡിൽ പ്രിഫിക്സ് ഇല്ലാതെ വർക്ക് ആകേണ്ടവ ഇവിടെ ചേർക്കാം
+                const noPrefixList = ['menu', 'help', 'alive', 'gemini', 'ai', 'ping'];
+                if (noPrefixList.includes(command)) isCommand = true;
+            }
         }
 
         if (!isCommand) {
@@ -83,7 +90,6 @@ async function handleMessages(sock, chatUpdate) {
         await addCommandReaction(sock, mek);
 
         switch (command) {
-            // 🛑 Prefix ഇല്ലാതെയും കൂടെ വർക്ക് ആകുന്നവ
             case 'menu':
             case 'help':
                 await helpCommand(sock, chatId, m);
@@ -101,21 +107,18 @@ async function handleMessages(sock, chatUpdate) {
                 await demoteCommand(sock, chatId, m);
                 break;
             case 'gemini':
+            case 'ai':
                 await aiCommand(sock, chatId, m);
                 break;
             case 'alive':
                 await aliveCommand(sock, chatId, m);
                 break;
-
-            // 🎵 Prefix നിർബന്ധമുള്ളവ
             case 'song':
             case 'play':
-                if (!hasPrefix) return; 
                 await songCommand(sock, chatId, m);
                 break;
             case 'sticker':
             case 's':
-                if (!hasPrefix) return;
                 await stickerCommand(sock, chatId, m);
                 break;
             case 'ping':
@@ -123,10 +126,6 @@ async function handleMessages(sock, chatUpdate) {
                 break;
             case 'owner':
                 await ownerCommand(sock, chatId);
-                break;
-            case 'ai':
-                if (!hasPrefix) return;
-                await aiCommand(sock, chatId, m);
                 break;
             
             default:
