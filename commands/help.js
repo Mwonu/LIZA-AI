@@ -7,12 +7,11 @@ async function helpCommand(sock, chatId, message) {
     try {
         const userMessage = (message.message?.conversation || message.message?.extendedTextMessage?.text || '').trim();
         const args = userMessage.split(' ');
-        const prefix = settings.PREFIX || '.';
         
         // --- ഹെഡർ ഡിസൈൻ ---
-        const header = `L I Z A  —  A I\n_v 3.0.0_  •  (hank!nd3 p4d4y41!)\n\n`;
+        const header = `L I Z A  —  A I  ✅\n_v 3.0.0_  •  (hank!nd3 p4d4y41!)\n\n`;
 
-        // 1. മെയിൻ ഇൻഡക്സ് (.menu എന്ന് മാത്രം ടൈപ്പ് ചെയ്യുമ്പോൾ)
+        // 1. മെയിൻ ഇൻഡക്സ് (വെറുതെ menu എന്ന് ടൈപ്പ് ചെയ്യുമ്പോൾ)
         if (args.length === 1) {
             const indexMenu = header + 
                 `S E L E C T  S E C T I O N\n\n` +
@@ -24,7 +23,7 @@ async function helpCommand(sock, chatId, message) {
                 `06   Entertainment & Fun\n` +
                 `07   Text Makers\n` +
                 `08   Owner Settings\n\n` +
-                `_Reply with *${prefix}menu [number]* to open_`;
+                `_Reply with *menu [number]* to open_`;
 
             return await sendMenu(sock, chatId, indexMenu, message);
         }
@@ -38,13 +37,13 @@ async function helpCommand(sock, chatId, message) {
         } else if (choice === '02' || choice === '2') {
             subMenu += `G R O U P\n\n• ban\n• promote\n• demote\n• mute\n• unmute\n• kick\n• warn\n• antilink\n• chatbot\n• tagall\n• hidetag\n• welcome`;
         } else if (choice === '03' || choice === '3') {
-            subMenu += `A I  T O O L S\n\n• gemini (No Prefix)\n• gpt\n• imagine\n• flux\n• sora`;
+            subMenu += `A I  T O O L S\n\n• gemini (Direct)\n• gpt\n• imagine\n• flux\n• sora`;
         } else if (choice === '04' || choice === '4') {
             subMenu += `D O W N L O A D S\n\n• play\n• song\n• spotify\n• instagram\n• facebook\n• tiktok\n• video`;
         } else if (choice === '05' || choice === '5') {
             subMenu += `I M A G E S\n\n• sticker\n• blur\n• simage\n• removebg\n• remini\n• meme\n• emojimix`;
         } else if (choice === '06' || choice === '6') {
-            subMenu += `F U N  &  G A M E S\n\n• tictactoe\n• truth\n• dare\n• flirting\n• shayari\n• ship\n• wasted\n• anime (nom/kiss/hug)`;
+            subMenu += `F U N  &  G A M E S\n\n• tictactoe\n• truth\n• dare\n• flirting\n• shayari\n• ship\n• wasted\n• anime`;
         } else if (choice === '07' || choice === '7') {
             subMenu += `T E X T  M A K E R\n\n• neon\n• matrix\n• glitch\n• ice\n• fire\n• hacker\n• sand\n• purple`;
         } else if (choice === '08' || choice === '8') {
@@ -60,7 +59,6 @@ async function helpCommand(sock, chatId, message) {
     }
 }
 
-// ഇമേജ് സഹിതം മെസേജ് അയക്കാനുള്ള ഫങ്ക്ഷൻ
 async function sendMenu(sock, chatId, text, quoted) {
     const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
     const contextInfo = {
@@ -68,17 +66,13 @@ async function sendMenu(sock, chatId, text, quoted) {
         isForwarded: true,
         forwardedNewsletterMessageInfo: {
             newsletterJid: '120363161513685998@newsletter',
-            newsletterName: 'LIZA-AI (hank!nd3 p4d4y41!)',
+            newsletterName: 'LIZA-AI ✅ (hank!nd3 p4d4y41!)',
             serverMessageId: -1
         }
     };
 
     if (fs.existsSync(imagePath)) {
-        return await sock.sendMessage(chatId, {
-            image: fs.readFileSync(imagePath),
-            caption: text,
-            contextInfo
-        }, { quoted });
+        return await sock.sendMessage(chatId, { image: fs.readFileSync(imagePath), caption: text, contextInfo }, { quoted });
     } else {
         return await sock.sendMessage(chatId, { text, contextInfo }, { quoted });
     }
