@@ -2,7 +2,7 @@
  * - A WhatsApp Bot (LIZA-AI)
  * Optimized for Railway Deployment
  */
-require('./settings')
+require('./config') // settings എന്നതിന് പകരം config എന്ന് മാറ്റി
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
 const chalk = require('chalk')
@@ -46,7 +46,7 @@ app.listen(port, "0.0.0.0", () => {
 // Import lightweight store
 const store = require('./lib/lightweight_store')
 store.readFromFile()
-const settings = require('./settings')
+const settings = require('./config') // settings എന്നതിന് പകരം config എന്ന് മാറ്റി
 setInterval(() => store.writeToFile(), settings.storeWriteInterval || 10000)
 
 // Memory management optimized
@@ -111,35 +111,4 @@ async function startXeonBotInc() {
             if (connection === 'close') {
                 const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
                 if (shouldReconnect) {
-                    console.log(chalk.red('❌ Connection lost. Reconnecting...'))
-                    startXeonBotInc()
-                }
-            }
-        })
-
-        XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
-            try {
-                const mek = chatUpdate.messages[0]
-                if (!mek.message) return
-                if (mek.key && mek.key.remoteJid === 'status@broadcast') {
-                    await handleStatus(XeonBotInc, chatUpdate);
-                    return;
-                }
-                await handleMessages(XeonBotInc, chatUpdate, true)
-            } catch (err) {
-                console.error(err)
-            }
-        })
-
-        XeonBotInc.public = true
-        XeonBotInc.serializeM = (m) => smsg(XeonBotInc, m, store)
-
-        return XeonBotInc
-    } catch (error) {
-        console.error('Fatal Error:', error)
-        await delay(5000)
-        startXeonBotInc()
-    }
-}
-
-startXeonBotInc()
+                    console.log(chalk
