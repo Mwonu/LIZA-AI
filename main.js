@@ -1,6 +1,8 @@
 // 🧹 Temp storage cleanup logic
 const fs = require('fs');
 const path = require('path');
+const chalk = require('chalk'); // ⬅️ ഇത് ചേർക്കാത്തതാണ് എറർ വരാൻ കാരണം
+
 const customTemp = path.join(process.cwd(), 'temp');
 if (!fs.existsSync(customTemp)) fs.mkdirSync(customTemp, { recursive: true });
 
@@ -66,7 +68,6 @@ async function handleMessages(sock, chatUpdate) {
                 isCommand = true;
             } else {
                 command = userMessage.trim().split(' ')[0].toLowerCase();
-                // ഹൈബ്രിഡ് മോഡിൽ പ്രിഫിക്സ് ഇല്ലാതെ വർക്ക് ആകേണ്ട കമാൻഡുകൾ
                 const noPrefixList = ['menu', 'help', 'alive', 'ai', 'ping', 'gemini'];
                 if (noPrefixList.includes(command)) isCommand = true;
             }
@@ -77,8 +78,12 @@ async function handleMessages(sock, chatUpdate) {
             return;
         }
 
-        // 📝 ലോഗ് ചെക്ക് - റെയിൽവേ ലോഗിൽ ഇത് കാണാൻ സാധിക്കും
-        console.log(chalk.greenBright(`[COMMAND] ${command} | From: ${senderId} | Group: ${isGroup}`));
+        // 📝 ലോഗ് ചെക്ക് - chalk എറർ വരാതിരിക്കാൻ സുരക്ഷിതമായ രീതി
+        try {
+            console.log(chalk.greenBright(`[COMMAND] ${command} | From: ${senderId}`));
+        } catch (e) {
+            console.log(`[COMMAND] ${command} | From: ${senderId}`);
+        }
 
         // Public/Private check
         let isPublic = true;
@@ -94,7 +99,11 @@ async function handleMessages(sock, chatUpdate) {
         if (!isPublic && !senderIsOwnerOrSudo) return;
 
         // Reaction ആഡ് ചെയ്യുന്നു
-        await addCommandReaction(sock, mek);
+        try {
+            await addCommandReaction(sock, mek);
+        } catch (e) {
+            console.log("Reaction error:", e.message);
+        }
 
         // --- കമാൻഡ് സ്വിച്ച് ലോജിക് ---
         switch (command) {
