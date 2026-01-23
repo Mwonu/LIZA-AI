@@ -1,266 +1,86 @@
+/// Copyright @(hank!nd3 p4d4y41!
 const settings = require('../config');
 const fs = require('fs');
 const path = require('path');
 
 async function helpCommand(sock, chatId, message) {
-    const helpMessage = `
-╔═══════════════════╗
-   *🤖 ${settings.botName || 'LIZA BOT-AI'}*  
-   Version: *${settings.version || '3.0.0'}*
-   by ${settings.botOwner || 'Mr Unique Hacker'}
-   YT : ${global.ytch}
-╚═══════════════════╝
-
-*Available Commands:*
-
-╔═══════════════════╗
-🌐 *General Commands*:
-║ ➤ .help or .menu
-║ ➤ .ping
-║ ➤ .alive
-║ ➤ .tts <text>
-║ ➤ .owner
-║ ➤ .joke
-║ ➤ .quote
-║ ➤ .fact
-║ ➤ .weather <city>
-║ ➤ .news
-║ ➤ .attp <text>
-║ ➤ .lyrics <song_title>
-║ ➤ .8ball <question>
-║ ➤ .groupinfo
-║ ➤ .staff or .admins 
-║ ➤ .vv
-║ ➤ .trt <text> <lang>
-║ ➤ .ss <link>
-║ ➤ .jid
-║ ➤ .url
-╚═══════════════════╝ 
-
-╔═══════════════════╗
-👮‍♂️ *Admin Commands*:
-║ ➤ .ban @user
-║ ➤ .promote @user
-║ ➤ .demote @user
-║ ➤ .mute <minutes>
-║ ➤ .unmute
-║ ➤ .delete or .del
-║ ➤ .kick @user
-║ ➤ .warnings @user
-║ ➤ .warn @user
-║ ➤ .antilink
-║ ➤ .antibadword
-║ ➤ .clear
-║ ➤ .tag <message>
-║ ➤ .tagall
-║ ➤ .tagnotadmin
-║ ➤ .hidetag <message>
-║ ➤ .chatbot
-║ ➤ .resetlink
-║ ➤ .antitag <on/off>
-║ ➤ .welcome <on/off>
-║ ➤ .goodbye <on/off>
-║ ➤ .setgdesc <description>
-║ ➤ .setgname <new name>
-║ ➤ .setgpp (reply to image)
-╚═══════════════════╝
-
-╔═══════════════════╗
-🔒 *Owner Commands*:
-║ ➤ .mode <public/private>
-║ ➤ .clearsession
-║ ➤ .antidelete
-║ ➤ .cleartmp
-║ ➤ .update
-║ ➤ .settings
-║ ➤ .setpp <reply to image>
-║ ➤ .autoreact <on/off>
-║ ➤ .autostatus <on/off>
-║ ➤ .autostatus react <on/off>
-║ ➤ .autotyping <on/off>
-║ ➤ .autoread <on/off>
-║ ➤ .anticall <on/off>
-║ ➤ .pmblocker <on/off/status>
-║ ➤ .pmblocker setmsg <text>
-║ ➤ .setmention <reply to msg>
-║ ➤ .mention <on/off>
-╚═══════════════════╝
-
-╔═══════════════════╗
-🎨 *Image/Sticker Commands*:
-║ ➤ .blur <image>
-║ ➤ .simage <reply to sticker>
-║ ➤ .sticker <reply to image>
-║ ➤ .removebg
-║ ➤ .remini
-║ ➤ .crop <reply to image>
-║ ➤ .tgsticker <Link>
-║ ➤ .meme
-║ ➤ .take <packname> 
-║ ➤ .emojimix <emj1>+<emj2>
-║ ➤ .igs <insta link>
-║ ➤ .igsc <insta link>
-╚═══════════════════╝  
-
-╔═══════════════════╗
-🖼️ *Pies Commands*:
-║ ➤ .pies <country>
-║ ➤ .china 
-║ ➤ .indonesia 
-║ ➤ .japan 
-║ ➤ .korea 
-║ ➤ .hijab
-╚═══════════════════╝
-
-╔═══════════════════╗
-🎮 *Game Commands*:
-║ ➤ .tictactoe @user
-║ ➤ .hangman
-║ ➤ .guess <letter>
-║ ➤ .trivia
-║ ➤ .answer <answer>
-║ ➤ .truth
-║ ➤ .dare
-╚═══════════════════╝
-
-╔═══════════════════╗
-🤖 *AI Commands*:
-║ ➤ .gpt <question>
-║ ➤ .gemini <question>
-║ ➤ .imagine <prompt>
-║ ➤ .flux <prompt>
-║ ➤ .sora <prompt>
-╚═══════════════════╝
-
-╔═══════════════════╗
-🎯 *Fun Commands*:
-║ ➤ .compliment @user
-║ ➤ .insult @user
-║ ➤ .flirt 
-║ ➤ .shayari
-║ ➤ .goodnight
-║ ➤ .roseday
-║ ➤ .character @user
-║ ➤ .wasted @user
-║ ➤ .ship @user
-║ ➤ .simp @user
-║ ➤ .stupid @user [text]
-╚═══════════════════╝
-
-╔═══════════════════╗
-🔤 *Textmaker*:
-║ ➤ .metallic <text>
-║ ➤ .ice <text>
-║ ➤ .snow <text>
-║ ➤ .impressive <text>
-║ ➤ .matrix <text>
-║ ➤ .light <text>
-║ ➤ .neon <text>
-║ ➤ .devil <text>
-║ ➤ .purple <text>
-║ ➤ .thunder <text>
-║ ➤ .leaves <text>
-║ ➤ .1917 <text>
-║ ➤ .arena <text>
-║ ➤ .hacker <text>
-║ ➤ .sand <text>
-║ ➤ .blackpink <text>
-║ ➤ .glitch <text>
-║ ➤ .fire <text>
-╚═══════════════════╝
-
-╔═══════════════════╗
-📥 *Downloader*:
-║ ➤ .play <song_name>
-║ ➤ .song <song_name>
-║ ➤ .spotify <query>
-║ ➤ .instagram <link>
-║ ➤ .facebook <link>
-║ ➤ .tiktok <link>
-║ ➤ .video <song name>
-║ ➤ .ytmp4 <Link>
-╚═══════════════════╝
-
-╔═══════════════════╗
-🧩 *MISC*:
-║ ➤ .heart
-║ ➤ .horny
-║ ➤ .circle
-║ ➤ .lgbt
-║ ➤ .lolice
-║ ➤ .its-so-stupid
-║ ➤ .namecard 
-║ ➤ .oogway
-║ ➤ .tweet
-║ ➤ .ytcomment 
-║ ➤ .comrade 
-║ ➤ .gay 
-║ ➤ .glass 
-║ ➤ .jail 
-║ ➤ .passed 
-║ ➤ .triggered
-╚═══════════════════╝
-
-╔═══════════════════╗
-🖼️ *ANIME*:
-║ ➤ .nom 
-║ ➤ .poke 
-║ ➤ .cry 
-║ ➤ .kiss 
-║ ➤ .pat 
-║ ➤ .hug 
-║ ➤ .wink 
-║ ➤ .facepalm 
-╚═══════════════════╝
-
-╔═══════════════════╗
-💻 *Github Commands:*
-║ ➤ .git
-║ ➤ .github
-║ ➤ .sc
-║ ➤ .script
-║ ➤ .repo
-╚═══════════════════╝
-
-Join our channel for updates:`;
-
     try {
-        const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+        const userMessage = (message.message?.conversation || message.message?.extendedTextMessage?.text || '').trim();
+        const args = userMessage.split(' ');
+        const prefix = settings.PREFIX || '.';
         
-        if (fs.existsSync(imagePath)) {
-            const imageBuffer = fs.readFileSync(imagePath);
-            
-            await sock.sendMessage(chatId, {
-                image: imageBuffer,
-                caption: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD',
-                        serverMessageId: -1
-                    }
-                }
-            },{ quoted: message });
-        } else {
-            console.error('Bot image not found at:', imagePath);
-            await sock.sendMessage(chatId, { 
-                text: helpMessage,
-                contextInfo: {
-                    forwardingScore: 1,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363161513685998@newsletter',
-                        newsletterName: 'KnightBot MD by Mr Unique Hacker',
-                        serverMessageId: -1
-                    } 
-                }
-            });
+        // --- ഹെഡർ ഡിസൈൻ ---
+        const header = `L I Z A  —  A I\n_v 3.0.0_  •  (hank!nd3 p4d4y41!)\n\n`;
+
+        // 1. മെയിൻ ഇൻഡക്സ് (.menu എന്ന് മാത്രം ടൈപ്പ് ചെയ്യുമ്പോൾ)
+        if (args.length === 1) {
+            const indexMenu = header + 
+                `S E L E C T  S E C T I O N\n\n` +
+                `01   General & System\n` +
+                `02   Group Management\n` +
+                `03   Artificial Intelligence\n` +
+                `04   Media & Downloads\n` +
+                `05   Image & Stickers\n` +
+                `06   Entertainment & Fun\n` +
+                `07   Text Makers\n` +
+                `08   Owner Settings\n\n` +
+                `_Reply with *${prefix}menu [number]* to open_`;
+
+            return await sendMenu(sock, chatId, indexMenu, message);
         }
+
+        const choice = args[1];
+        let subMenu = header;
+
+        // 2. സബ് സെക്ഷനുകൾ
+        if (choice === '01' || choice === '1') {
+            subMenu += `G E N E R A L\n\n• ping\n• alive\n• owner\n• joke\n• quote\n• weather\n• news\n• lyrics\n• groupinfo\n• staff\n• trt`;
+        } else if (choice === '02' || choice === '2') {
+            subMenu += `G R O U P\n\n• ban\n• promote\n• demote\n• mute\n• unmute\n• kick\n• warn\n• antilink\n• chatbot\n• tagall\n• hidetag\n• welcome`;
+        } else if (choice === '03' || choice === '3') {
+            subMenu += `A I  T O O L S\n\n• gemini (No Prefix)\n• gpt\n• imagine\n• flux\n• sora`;
+        } else if (choice === '04' || choice === '4') {
+            subMenu += `D O W N L O A D S\n\n• play\n• song\n• spotify\n• instagram\n• facebook\n• tiktok\n• video`;
+        } else if (choice === '05' || choice === '5') {
+            subMenu += `I M A G E S\n\n• sticker\n• blur\n• simage\n• removebg\n• remini\n• meme\n• emojimix`;
+        } else if (choice === '06' || choice === '6') {
+            subMenu += `F U N  &  G A M E S\n\n• tictactoe\n• truth\n• dare\n• flirting\n• shayari\n• ship\n• wasted\n• anime (nom/kiss/hug)`;
+        } else if (choice === '07' || choice === '7') {
+            subMenu += `T E X T  M A K E R\n\n• neon\n• matrix\n• glitch\n• ice\n• fire\n• hacker\n• sand\n• purple`;
+        } else if (choice === '08' || choice === '8') {
+            subMenu += `O W N E R\n\n• mode\n• update\n• clearsession\n• antidelete\n• setpp\n• pmblocker`;
+        } else {
+            return await sock.sendMessage(chatId, { text: "_Section not found!_" }, { quoted: message });
+        }
+
+        return await sendMenu(sock, chatId, subMenu, message);
+
     } catch (error) {
-        console.error('Error in help command:', error);
-        await sock.sendMessage(chatId, { text: helpMessage });
+        console.error('Menu Error:', error);
+    }
+}
+
+// ഇമേജ് സഹിതം മെസേജ് അയക്കാനുള്ള ഫങ്ക്ഷൻ
+async function sendMenu(sock, chatId, text, quoted) {
+    const imagePath = path.join(__dirname, '../assets/bot_image.jpg');
+    const contextInfo = {
+        forwardingScore: 1,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterJid: '120363161513685998@newsletter',
+            newsletterName: 'LIZA-AI (hank!nd3 p4d4y41!)',
+            serverMessageId: -1
+        }
+    };
+
+    if (fs.existsSync(imagePath)) {
+        return await sock.sendMessage(chatId, {
+            image: fs.readFileSync(imagePath),
+            caption: text,
+            contextInfo
+        }, { quoted });
+    } else {
+        return await sock.sendMessage(chatId, { text, contextInfo }, { quoted });
     }
 }
 
