@@ -95,8 +95,40 @@ async function startXeonBotInc() {
             }
         })
 
-        // മെസേജുകൾ അയക്കുന്ന ഭാഗം എറർ ഇല്ലാത്ത രീതിയിൽ തിരുത്തിയത്
         XeonBotInc.ev.on('messages.upsert', async chatUpdate => {
             try {
                 const mek = chatUpdate.messages[0]
-                if (!mek.message)
+                if (!mek.message) return
+                if (mek.key && mek.key.remoteJid === 'status@broadcast') {
+                    await handleStatus(XeonBotInc, chatUpdate);
+                    return;
+                }
+                await handleMessages(XeonBotInc, chatUpdate)
+            } catch (err) {
+                console.error('Error in upsert:', err)
+            }
+        })
+
+        XeonBotInc.ev.on('group-participants.update', async (anu) => {
+            await handleGroupParticipantUpdate(XeonBotInc, anu)
+        })
+
+        XeonBotInc.decodeJid = (jid) => {
+            if (!jid) return jid
+            if (/:\d+@/gi.test(jid)) {
+                let decode = jidDecode(jid) || {}
+                return decode.user && decode.server && decode.user + '@' + decode.server || jid
+            } else return jid
+        }
+
+        XeonBotInc.public = settings.MODE === 'public' ? true : false
+
+        return XeonBotInc
+    } catch (error) {
+        console.error('Fatal Error:', error)
+        await delay(5000)
+        startXeonBotInc()
+    }
+}
+
+startXeonBotInc()
