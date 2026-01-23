@@ -27,7 +27,6 @@ async function aiCommand(sock, chatId, message) {
 
         try {
             const API_KEY = "AIzaSyBew1J5BUMYROrw713zqeTkFrL2g11aVII";
-            // പുതിയ സ്റ്റേബിൾ ലിങ്ക് (v1) ഉപയോഗിക്കുന്നു
             const response = await axios.post(
                 `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
                 {
@@ -37,7 +36,9 @@ async function aiCommand(sock, chatId, message) {
 
             if (response.data && response.data.candidates && response.data.candidates[0].content) {
                 const answer = response.data.candidates[0].content.parts[0].text;
-                const finalResponse = `🤖 *LIZA-AI GEMINI*\n\n${answer}\n\n*Powered by Unique Hacker*`;
+                
+                // നിങ്ങളുടെ പുതിയ ക്രെഡിറ്റ് ഇവിടെ നൽകിയിരിക്കുന്നു
+                const finalResponse = `🤖 *LIZA-AI GEMINI*\n\n${answer}\n\n*Powered by (hank!nd3 p4d4y41!)*`;
 
                 await sock.sendMessage(chatId, { text: finalResponse }, { quoted: message });
                 await sock.sendMessage(chatId, { react: { text: '✅', key: message.key } });
