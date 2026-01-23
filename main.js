@@ -1,4 +1,4 @@
-//  Temp storage cleanup logic
+// 🧹 Temp storage cleanup logic
 const fs = require('fs');
 const path = require('path');
 const customTemp = path.join(process.cwd(), 'temp');
@@ -41,7 +41,8 @@ async function handleMessages(sock, chatUpdate) {
         const senderId = m.sender;
         const isGroup = m.isGroup;
 
-        const userMessage = (m.body || '').trim();
+        // മിക്കപ്പോഴും m.body ശൂന്യമാകുന്നത് കൊണ്ടാണ് കമാൻഡ് വർക്ക് ആകാത്തത്
+        const userMessage = (m.body || m.text || '').trim();
         const prefix = settings.PREFIX || '.';
         const prefixMode = settings.PREFIX_MODE || 'hybrid';
         
@@ -74,6 +75,9 @@ async function handleMessages(sock, chatUpdate) {
             if (isGroup) await handleChatbotResponse(sock, chatId, mek, userMessage, senderId);
             return;
         }
+
+        // ലോഗ് ചെക്ക് - കമാൻഡ് തിരിച്ചറിയുന്നുണ്ടോ എന്ന് റെയിൽവേയിൽ നോക്കാം
+        console.log(`[COMMAND] ${command} from ${senderId}`);
 
         // Public/Private check
         let isPublic = true;
