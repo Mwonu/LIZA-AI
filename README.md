@@ -33,9 +33,15 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 
 ### Step 3: Deploy Now
 
-താഴെ കാണുന്ന ബട്ടണുകൾ ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഇഷ്ടമുള്ള സെർവറിൽ ബോട്ട് ഡെപ്ലോയ് ചെയ്യാം. **AlwaysData**-യാണ് ഏറ്റവും ശുപാർശ ചെയ്യുന്നത്.
+താഴെ കാണുന്ന ബട്ടണുകൾ ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഇഷ്ടമുള്ള സെർവറിൽ ബോട്ട് ഡെപ്ലോയ് ചെയ്യാം. റെയിൽവേയും ആൾവേസ് ഡാറ്റയുമാണ് ഏറ്റവും സുരക്ഷിതം.
 
 <div align="center">
+
+  <a href="https://railway.app/template/deploy?repo=https://github.com/Mwonu/LIZA-AI">
+    <img src="https://railway.app/button.svg" alt="Deploy on Railway"/>
+  </a>
+
+  <br><br>
 
   <a href="https://admin.alwaysdata.com/" target="_blank">
     <img src="https://img.shields.io/badge/Deploy%20on-AlwaysData-orange?style=for-the-badge&logo=cloud" alt="Deploy to AlwaysData"/>
@@ -56,11 +62,17 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 
 ---
 
-### ⚙️ AlwaysData Configuration Info
-AlwaysData-യിൽ ഡെപ്ലോയ് ചെയ്യുമ്പോൾ താഴെ പറയുന്നവ ശ്രദ്ധിക്കുക:
+### ⚙️ Deployment Configuration Info
+
+#### **Railway (Recommended)**
+* മുകളിലെ Railway ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.
+* **SESSION_ID** എന്ന ബോക്സിൽ നിങ്ങളുടെ സെഷൻ ഐഡി പേസ്റ്റ് ചെയ്യുക.
+* **Deploy** ബട്ടൺ അമർത്തുക. ബാക്കി കാര്യങ്ങൾ ഓട്ടോമാറ്റിക് ആയി നടന്നുകൊള്ളും.
+
+#### **AlwaysData**
 * **Site Type:** Node.js
 * **Command:** `npm start`
-* **Environment Variable:** `SESSION_ID` (നിങ്ങളുടെ സെഷൻ ഐഡി ഇവിടെ നൽകുക)
+* **Environment Variable:** `SESSION_ID`
 * **Port:** 8100
 
 ---
@@ -75,3 +87,6 @@ AlwaysData-യിൽ ഡെപ്ലോയ് ചെയ്യുമ്പോൾ 
     <img src="https://img.shields.io/badge/Katabump-D6B7D6?style=for-the-badge&logo=server&logoColor=black" alt="Katabump"/>
   </a>
 </div>
+
+---
+**Maintained by:** (hank!nd3 p4d4y41!)
