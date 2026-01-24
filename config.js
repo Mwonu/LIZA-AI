@@ -14,7 +14,7 @@ module.exports = {
     PREFIX_MODE: global.prefix_mode,
     WARN_COUNT: 3,
     packname: "LIZA-AI",
-    // നിങ്ങളുടെ ക്രെഡിറ്റ് ഇവിടെ സുരക്ഷിതമാണ്
+    // നിങ്ങളുടെ ക്രെഡിറ്റ് ഇവിടെ നൽകിയിട്ടുണ്ട്
     author: "(hank!nd3 p4d4y41!)", 
     
     // APIs 
