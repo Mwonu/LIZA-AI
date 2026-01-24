@@ -37,7 +37,7 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 
 <div align="center">
 
-  <a href="https://railway.app/new/import?repo=https://github.com/Mwonu/LIZA-AI">
+  <a href="https://railway.app/new/import?repo=Mwonu/LIZA-AI">
     <img src="https://railway.app/button.svg" alt="Deploy on Railway"/>
   </a>
 
@@ -66,9 +66,9 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 
 #### **Railway (Recommended)**
 * മുകളിലെ **Railway** ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.
-* നിങ്ങളുടെ GitHub അക്കൗണ്ട് കണക്ട് ചെയ്യാൻ ചോദിച്ചാൽ അത് ചെയ്യുക.
-* അതിനുശേഷം നിങ്ങളുടെ ഫോർക്ക് ചെയ്ത `LIZA-AI` റിപ്പോസിറ്ററി സെലക്ട് ചെയ്യുക.
-* **Add Variables** എന്നതിൽ `SESSION_ID` നൽകുക.
+* **Configure** ബട്ടൺ അമർത്തി നിങ്ങളുടെ GitHub അക്കൗണ്ട് ലോഗിൻ ചെയ്യുക.
+* **Variables** സെക്ഷനിൽ `SESSION_ID` ഉൾപ്പെടെയുള്ള വിവരങ്ങൾ നൽകുക.
+* `railway.json` ഫയൽ ഉള്ളതിനാൽ റെയിൽവേ ബാക്കി കാര്യങ്ങൾ തനിയെ ചെയ്തുകൊള്ളും.
 
 #### **AlwaysData**
 * **Site Type:** Node.js
