@@ -10,25 +10,10 @@
     "restartPolicyMaxRetries": 10
   },
   "variables": {
-    "SESSION_ID": {
-      "description": "Enter your LIZA-AI Session ID here",
-      "required": true
-    },
-    "OWNER_NUMBER": {
-      "description": "Your WhatsApp number (e.g., 918075379950)",
-      "default": "918075379950"
-    },
-    "MODE": {
-      "description": "Bot mode: public or private",
-      "default": "public"
-    },
-    "PREFIX": {
-      "description": "Bot command prefix",
-      "default": "."
-    },
-    "PREFIX_MODE": {
-      "description": "Prefix mode: hybrid, prefix, or no-prefix",
-      "default": "hybrid"
-    }
+    "SESSION_ID": "",
+    "OWNER_NUMBER": "918075379950",
+    "MODE": "public",
+    "PREFIX": ".",
+    "PREFIX_MODE": "hybrid"
   }
 }
