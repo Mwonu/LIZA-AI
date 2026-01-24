@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(); // 'R' മാറ്റി 'r' ആക്കി
 
 // ബോട്ടിന്റെ പ്രധാന സെറ്റിംഗ്സ്
 global.owner = process.env.OWNER_NUMBER || '91XXXXXXXXXX'; 
@@ -7,9 +7,9 @@ global.mode = process.env.MODE || 'public';
 
 /**
  * PREFIX_MODE സെറ്റിംഗ്സ്:
- * 'hybrid'    - Prefix ഉപയോഗിച്ചും ഇല്ലാതെയും കമാൻഡ് വർക്ക് ആകും (ഉദാ: .menu, menu)
- * 'prefix'    - Prefix ഉണ്ടെങ്കിൽ മാത്രമേ വർക്ക് ആകൂ (ഉദാ: .menu മാത്രം)
- * 'no-prefix' - Prefix ഇല്ലാതെ മാത്രമേ വർക്ക് ആകൂ (ഉദാ: menu മാത്രം)
+ * 'hybrid'    - Prefix ഉപയോഗിച്ചും ഇല്ലാതെയും കമാൻഡ് വർക്ക് ആകും
+ * 'prefix'    - Prefix ഉണ്ടെങ്കിൽ മാത്രമേ വർക്ക് ആകൂ
+ * 'no-prefix' - Prefix ഇല്ലാതെ മാത്രമേ വർക്ക് ആകൂ
  */
 global.prefix_mode = process.env.PREFIX_MODE || 'hybrid'; 
 
@@ -44,10 +44,10 @@ module.exports = {
     prefix: global.prefix,
     MODE: global.mode,
     mode: global.mode,
-    PREFIX_MODE: global.prefix_mode, // പുതിയ മോഡ് ഇവിടെ ചേർത്തു
+    PREFIX_MODE: global.prefix_mode,
     WARN_COUNT: 3,
     APIs: global.APIs,
     APIKeys: global.APIKeys,
     packname: "LIZA-AI",
-    author: "(hank!nd3 p4d4y41!)"
+    author: "(hank!nd3 p4d4y41!)" // ക്രെഡിറ്റ് സെറ്റ് ചെയ്തു
 };
