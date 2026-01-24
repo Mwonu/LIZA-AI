@@ -1,7 +1,7 @@
 // 🧹 Temp storage cleanup logic
 const fs = require('fs');
 const path = require('path');
-const chalk = require('chalk'); // ⬅️ ഇത് ചേർക്കാത്തതാണ് എറർ വരാൻ കാരണം
+const chalk = require('chalk');
 
 const customTemp = path.join(process.cwd(), 'temp');
 if (!fs.existsSync(customTemp)) fs.mkdirSync(customTemp, { recursive: true });
@@ -34,8 +34,6 @@ async function handleMessages(sock, chatUpdate) {
     try {
         const mek = chatUpdate.messages[0];
         if (!mek || !mek.message) return;
-        
-        // Status മെസ്സേജുകൾ ഒഴിവാക്കാൻ
         if (mek.key && mek.key.remoteJid === 'status@broadcast') return;
 
         const m = smsg(sock, mek);
@@ -43,13 +41,14 @@ async function handleMessages(sock, chatUpdate) {
         const senderId = m.sender;
         const isGroup = m.isGroup;
 
-        // 🛠️ കൂടുതൽ സ്റ്റേബിൾ ആയ മെസ്സേജ് ഡിറ്റക്ഷൻ
-        const userMessage = (m.body || m.text || (m.msg && m.msg.caption) || (m.msg && m.msg.text) || '').trim();
+        // 🛠️ കൂടുതൽ വ്യക്തമായ മെസ്സേജ് ഡിറ്റക്ഷൻ
+        const body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype === 'imageMessage') ? m.message.imageMessage.caption : (m.mtype === 'videoMessage') ? m.message.videoMessage.caption : (m.mtype === 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype === 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype === 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype === 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : m.text || '';
+        
+        const userMessage = body.trim();
         const prefix = settings.PREFIX || '.';
         const prefixMode = settings.PREFIX_MODE || 'hybrid';
         
         const hasPrefix = userMessage.startsWith(prefix);
-        
         let command = '';
         let isCommand = false;
 
@@ -67,43 +66,25 @@ async function handleMessages(sock, chatUpdate) {
                 command = userMessage.slice(prefix.length).trim().split(' ')[0].toLowerCase();
                 isCommand = true;
             } else {
-                command = userMessage.trim().split(' ')[0].toLowerCase();
+                const tempCmd = userMessage.trim().split(' ')[0].toLowerCase();
                 const noPrefixList = ['menu', 'help', 'alive', 'ai', 'ping', 'gemini'];
-                if (noPrefixList.includes(command)) isCommand = true;
+                if (noPrefixList.includes(tempCmd)) {
+                    command = tempCmd;
+                    isCommand = true;
+                }
             }
         }
 
-        if (!isCommand) {
+        if (!isCommand || command === '') {
             if (isGroup) await handleChatbotResponse(sock, chatId, mek, userMessage, senderId);
             return;
         }
 
-        // 📝 ലോഗ് ചെക്ക് - chalk എറർ വരാതിരിക്കാൻ സുരക്ഷിതമായ രീതി
-        try {
-            console.log(chalk.greenBright(`[COMMAND] ${command} | From: ${senderId}`));
-        } catch (e) {
-            console.log(`[COMMAND] ${command} | From: ${senderId}`);
-        }
-
-        // Public/Private check
-        let isPublic = true;
-        try {
-            const statusPath = './data/messageCount.json';
-            if (fs.existsSync(statusPath)) {
-                const data = JSON.parse(fs.readFileSync(statusPath));
-                if (typeof data.isPublic === 'boolean') isPublic = data.isPublic;
-            }
-        } catch (e) { isPublic = true; }
-
-        const senderIsOwnerOrSudo = await isOwnerOrSudo(senderId, sock, chatId);
-        if (!isPublic && !senderIsOwnerOrSudo) return;
+        // 📝 റെയിൽവേ ലോഗിൽ കമാൻഡ് വരുന്നത് കാണാൻ
+        console.log(chalk.black(chalk.bgGreen('[ EXECUTE ]')), chalk.green(command), 'from', chalk.yellow(senderId.split('@')[0]));
 
         // Reaction ആഡ് ചെയ്യുന്നു
-        try {
-            await addCommandReaction(sock, mek);
-        } catch (e) {
-            console.log("Reaction error:", e.message);
-        }
+        try { await addCommandReaction(sock, mek); } catch (e) {}
 
         // --- കമാൻഡ് സ്വിച്ച് ലോജിക് ---
         switch (command) {
@@ -148,11 +129,13 @@ async function handleMessages(sock, chatUpdate) {
                 await ownerCommand(sock, chatId);
                 break;
             default:
+                // കമാൻഡ് ലിസ്റ്റിൽ ഇല്ലാത്തവ ഗ്രൂപ്പിൽ ചാറ്റ്ബോട്ടിന് വിടുന്നു
+                if (isGroup) await handleChatbotResponse(sock, chatId, mek, userMessage, senderId);
                 break;
         }
 
     } catch (error) {
-        console.error('❌ Error in handleMessages:', error);
+        console.error(chalk.red('❌ Error in handleMessages:'), error);
     }
 }
 
