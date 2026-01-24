@@ -5,7 +5,7 @@ const path = require('path');
 
 async function aliveCommand(sock, chatId, m) {
     try {
-        console.log("Attempting to send alive response..."); // ലോഗിൽ കാണാൻ
+        console.log("--- Executing Alive Command ---");
 
         const aliveMsg = `*L I Z A  —  A I* ✅\n\n` +
                          `_System is running smoothly_\n\n` +
@@ -31,13 +31,13 @@ async function aliveCommand(sock, chatId, m) {
             }
         };
 
-        // ഇമേജ് ഉണ്ടെങ്കിൽ മാത്രം ചേർക്കുന്നു, ഇല്ലെങ്കിൽ എറർ വരുത്തില്ല
+        // ഇമേജ് ഉണ്ടെങ്കിൽ മാത്രം ചേർക്കുന്നു
         try {
             if (fs.existsSync(imagePath)) {
                 context.externalAdReply.thumbnail = fs.readFileSync(imagePath);
             }
         } catch (e) {
-            console.log("Thumbnail error:", e.message);
+            console.log("Asset Error: Image not found at " + imagePath);
         }
 
         // മെസ്സേജ് അയക്കുന്നു
@@ -46,12 +46,16 @@ async function aliveCommand(sock, chatId, m) {
             contextInfo: context
         }, { quoted: m });
 
-        console.log("Alive response sent successfully!");
+        console.log("✅ Alive message sent to:", chatId);
 
     } catch (error) {
-        console.error('Final Error in alive command:', error);
-        // എറർ വന്നാലും ബോട്ട് മിണ്ടാതിരിക്കാതിരിക്കാൻ വെറും ടെക്സ്റ്റ് എങ്കിലും അയക്കും
-        await sock.sendMessage(chatId, { text: "*L I Z A  —  A I* ✅\n_Bot is active but encountered a context error._" }, { quoted: m });
+        console.error('CRITICAL ERROR in alive.js:', error);
+        // എറർ വന്നാൽ സിമ്പിൾ ടെക്സ്റ്റ് അയക്കും
+        try {
+            await sock.sendMessage(chatId, { text: "*L I Z A  —  A I* ✅\n_System is alive!_" }, { quoted: m });
+        } catch (retryErr) {
+            console.log("Failed to send even simple text.");
+        }
     }
 }
 
