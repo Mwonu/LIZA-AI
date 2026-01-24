@@ -1,7 +1,7 @@
 {
-  "name": "LIZA-AI",
-  "version": "1.0.0",
-  "description": "WhatsApp Bot Optimized for Railway",
+  "name": "liza-ai",
+  "version": "3.0.0",
+  "description": "WhatsApp Bot Optimized for Railway Deployment",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -49,5 +49,7 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "author": "(hank!nd3 p4d4y41!)",
+  "license": "MIT"
 }
