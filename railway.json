@@ -12,23 +12,23 @@
     "restartPolicyMaxRetries": 10,
     "variables": {
       "SESSION_ID": {
-        "description": "നിങ്ങളുടെ സെഷൻ ഐഡി ഇവിടെ നൽകുക",
+        "description": "Enter your LIZA-AI Session ID here",
         "required": true
       },
       "OWNER_NUMBER": {
-        "description": "നിങ്ങളുടെ ഫോൺ നമ്പർ (eg: 918075379950)",
+        "description": "Your WhatsApp number (e.g., 918075379950)",
         "defaultValue": "918075379950"
       },
       "MODE": {
-        "description": "Bot mode (public/private)",
+        "description": "Bot mode: public or private",
         "defaultValue": "public"
       },
       "PREFIX": {
-        "description": "Command Prefix (eg: .)",
+        "description": "Bot command prefix",
         "defaultValue": "."
       },
       "PREFIX_MODE": {
-        "description": "Prefix Mode (hybrid/prefix/no-prefix)",
+        "description": "Prefix mode: hybrid, prefix, or no-prefix",
         "defaultValue": "hybrid"
       }
     }
