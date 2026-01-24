@@ -10,7 +10,7 @@ pinned: false
 # LIZA-AI WHATSAPP BOT 🤖
 
 ### Step 1: Fork the Repository
-Click the button below to fork the LIZA-AI repository to your GitHub account:
+നിങ്ങളുടെ ഗിറ്റ്ഹബ്ബ് അക്കൗണ്ടിലേക്ക് ഈ ബോട്ട് ഫോർക്ക് ചെയ്യാൻ താഴെ കാണുന്ന ബട്ടൺ അമർത്തുക:
 
 <div align="center">
   <a href="https://github.com/Mwonu/LIZA-AI/fork">
@@ -21,7 +21,7 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 ---
 
 ### Step 2: Get Session ID
-നിങ്ങൾക്ക് പെയറിംഗ് കോഡ് ലഭിക്കാൻ താഴെ കാണുന്ന ബട്ടൺ ഉപയോഗിക്കാം. അത് വഴി കിട്ടുന്ന സെഷൻ ഐഡി കോപ്പി ചെയ്യുക.
+ബോട്ട് പ്രവർത്തിക്കാൻ ആവശ്യമായ സെഷൻ ഐഡി എടുക്കാൻ താഴെ കാണുന്ന ബട്ടൺ ഉപയോഗിക്കാം.
 
 <div align="center">
   <a href="https://replit.com/@fayasmonu24620/LIZA-PAIR-V1?s=app" target="_blank">
@@ -33,11 +33,11 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 
 ### Step 3: Deploy Now
 
-താഴെ കാണുന്ന ബട്ടണുകൾ ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഇഷ്ടമുള്ള സെർവറിൽ ബോട്ട് ഡെപ്ലോയ് ചെയ്യാം. റെയിൽവേയും ആൾവേസ് ഡാറ്റയുമാണ് ഏറ്റവും ശുപാർശ ചെയ്യുന്നത്.
+താഴെ കാണുന്ന ബട്ടണുകൾ ഉപയോഗിച്ച് ഡിപ്ലോയ് ചെയ്യാം. റെയിൽവേ ആണ് ഏറ്റവും കൂടുതൽ ശുപാർശ ചെയ്യുന്നത്.
 
 <div align="center">
 
-  <a href="https://railway.app/new/import?repo=Mwonu/LIZA-AI">
+  <a href="https://railway.app/new/import?repo=https://github.com/Mwonu/LIZA-AI">
     <img src="https://railway.app/button.svg" alt="Deploy on Railway"/>
   </a>
 
@@ -67,27 +67,4 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 #### **Railway (Recommended)**
 * മുകളിലെ **Railway** ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.
 * **Configure** ബട്ടൺ അമർത്തി നിങ്ങളുടെ GitHub അക്കൗണ്ട് ലോഗിൻ ചെയ്യുക.
-* **Variables** സെക്ഷനിൽ `SESSION_ID` ഉൾപ്പെടെയുള്ള വിവരങ്ങൾ നൽകുക.
-* `railway.json` ഫയൽ ഉള്ളതിനാൽ റെയിൽവേ ബാക്കി കാര്യങ്ങൾ തനിയെ ചെയ്തുകൊള്ളും.
-
-#### **AlwaysData**
-* **Site Type:** Node.js
-* **Command:** `npm start`
-* **Environment Variable:** `SESSION_ID`
-* **Port:** 8100
-
----
-
-### Deploy on VPS / Other
-<div align="center">
-  <a href="https://client.petrosky.io/aff.php?aff=394" target="_blank">
-    <img src="https://img.shields.io/badge/petrosky vps-0078E7?style=for-the-badge" alt="petrosky vps"/>
-  </a>
-  
-  <a href="https://dashboard.katabump.com/auth/login#d6b7d6" target="_blank">
-    <img src="https://img.shields.io/badge/Katabump-D6B7D6?style=for-the-badge&logo=server&logoColor=black" alt="Katabump"/>
-  </a>
-</div>
-
----
-**Maintained by:** (hank!nd3 p4d4y41!)
+* **
