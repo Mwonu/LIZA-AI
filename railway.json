@@ -10,10 +10,25 @@
     "restartPolicyMaxRetries": 10
   },
   "variables": {
-    "SESSION_ID": "",
-    "OWNER_NUMBER": "918075379950",
-    "MODE": "public",
-    "PREFIX": ".",
-    "PREFIX_MODE": "hybrid"
+    "SESSION_ID": {
+      "description": "നിങ്ങളുടെ Session ID ഇവിടെ നൽകുക",
+      "required": true
+    },
+    "OWNER_NUMBER": {
+      "description": "ബോട്ട് ഉടമയുടെ നമ്പർ (eg: 918075379950)",
+      "defaultValue": "918075379950"
+    },
+    "MODE": {
+      "description": "ബോട്ട് മോഡ് (public/private)",
+      "defaultValue": "public"
+    },
+    "PREFIX": {
+      "description": "കമാൻഡ് സ്റ്റാർട്ട് ചെയ്യേണ്ട അടയാളം",
+      "defaultValue": "."
+    },
+    "PREFIX_MODE": {
+      "description": "പ്രിഫിക്സ് രീതി (hybrid/prefix/no-prefix)",
+      "defaultValue": "hybrid"
+    }
   }
 }
