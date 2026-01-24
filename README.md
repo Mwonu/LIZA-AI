@@ -66,8 +66,9 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 
 #### **Railway (Recommended)**
 * മുകളിലെ **Railway** ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.
-* നിങ്ങളുടെ GitHub അക്കൗണ്ട് ലോഗിൻ ചെയ്യുക.
-* **SESSION_ID** ഉൾപ്പെടെയുള്ള വേരിയബിളുകൾ തനിയെ ലിസ്റ്റ് ചെയ്യപ്പെടും. അവിടെ വാല്യൂസ് നൽകി **Deploy** അമർത്തുക.
+* നിങ്ങളുടെ GitHub അക്കൗണ്ട് കണക്ട് ചെയ്യാൻ ചോദിച്ചാൽ അത് ചെയ്യുക.
+* അതിനുശേഷം നിങ്ങളുടെ ഫോർക്ക് ചെയ്ത `LIZA-AI` റിപ്പോസിറ്ററി സെലക്ട് ചെയ്യുക.
+* **Add Variables** എന്നതിൽ `SESSION_ID` നൽകുക.
 
 #### **AlwaysData**
 * **Site Type:** Node.js
