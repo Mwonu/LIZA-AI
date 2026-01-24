@@ -33,11 +33,11 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 
 ### Step 3: Deploy Now
 
-താഴെ കാണുന്ന ബട്ടണുകൾ ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഇഷ്ടമുള്ള സെർവറിൽ ബോട്ട് ഡെപ്ലോയ് ചെയ്യാം. റെയിൽവേയും ആൾവേസ് ഡാറ്റയുമാണ് ഏറ്റവും സുരക്ഷിതം.
+താഴെ കാണുന്ന ബട്ടണുകൾ ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഇഷ്ടമുള്ള സെർവറിൽ ബോട്ട് ഡെപ്ലോയ് ചെയ്യാം. റെയിൽവേയും ആൾവേസ് ഡാറ്റയുമാണ് ഏറ്റവും ശുപാർശ ചെയ്യുന്നത്.
 
 <div align="center">
 
-  <a href="https://railway.app/template/deploy?repo=https://github.com/Mwonu/LIZA-AI">
+  <a href="https://railway.app/new/import?repo=https://github.com/Mwonu/LIZA-AI">
     <img src="https://railway.app/button.svg" alt="Deploy on Railway"/>
   </a>
 
@@ -65,9 +65,9 @@ Click the button below to fork the LIZA-AI repository to your GitHub account:
 ### ⚙️ Deployment Configuration Info
 
 #### **Railway (Recommended)**
-* മുകളിലെ Railway ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.
-* **SESSION_ID** എന്ന ബോക്സിൽ നിങ്ങളുടെ സെഷൻ ഐഡി പേസ്റ്റ് ചെയ്യുക.
-* **Deploy** ബട്ടൺ അമർത്തുക. ബാക്കി കാര്യങ്ങൾ ഓട്ടോമാറ്റിക് ആയി നടന്നുകൊള്ളും.
+* മുകളിലെ **Railway** ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.
+* നിങ്ങളുടെ GitHub അക്കൗണ്ട് ലോഗിൻ ചെയ്യുക.
+* **SESSION_ID** ഉൾപ്പെടെയുള്ള വേരിയബിളുകൾ തനിയെ ലിസ്റ്റ് ചെയ്യപ്പെടും. അവിടെ വാല്യൂസ് നൽകി **Deploy** അമർത്തുക.
 
 #### **AlwaysData**
 * **Site Type:** Node.js
