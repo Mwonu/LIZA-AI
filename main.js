@@ -41,7 +41,7 @@ async function handleMessages(sock, chatUpdate) {
         const senderId = m.sender;
         const isGroup = m.isGroup;
 
-        // 🛠️ കൂടുതൽ വ്യക്തമായ മെസ്സേജ് ഡിറ്റക്ഷൻ
+        // 🛠️ മെസ്സേജ് ഡിറ്റക്ഷൻ മെച്ചപ്പെടുത്തി
         const body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype === 'imageMessage') ? m.message.imageMessage.caption : (m.mtype === 'videoMessage') ? m.message.videoMessage.caption : (m.mtype === 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype === 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype === 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype === 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : m.text || '';
         
         const userMessage = body.trim();
@@ -80,56 +80,70 @@ async function handleMessages(sock, chatUpdate) {
             return;
         }
 
-        // 📝 റെയിൽവേ ലോഗിൽ കമാൻഡ് വരുന്നത് കാണാൻ
+        // 📝 റെയിൽവേ ലോഗ്
         console.log(chalk.black(chalk.bgGreen('[ EXECUTE ]')), chalk.green(command), 'from', chalk.yellow(senderId.split('@')[0]));
 
         // Reaction ആഡ് ചെയ്യുന്നു
         try { await addCommandReaction(sock, mek); } catch (e) {}
 
-        // --- കമാൻഡ് സ്വിച്ച് ലോജിക് ---
+        // --- കമാൻഡ് സ്വിച്ച് ലോജിക് (Error Protected) ---
+        // കമാൻഡുകൾ ഫങ്ക്ഷൻ ആണോ എന്ന് പരിശോധിച്ച ശേഷം മാത്രം വിളിക്കുന്നു
+        const executeCmd = async (cmdFunc, ...args) => {
+            try {
+                if (typeof cmdFunc === 'function') {
+                    await cmdFunc(...args);
+                } else if (cmdFunc && typeof cmdFunc.default === 'function') {
+                    await cmdFunc.default(...args);
+                } else {
+                    console.log(chalk.red(`Command function not found for: ${command}`));
+                }
+            } catch (err) {
+                console.error(chalk.red(`Error executing ${command}:`), err);
+            }
+        };
+
         switch (command) {
             case 'menu':
             case 'help':
-                await helpCommand(sock, chatId, m);
+                await executeCmd(helpCommand, sock, chatId, m);
                 break;
             case 'alive':
-                await aliveCommand(sock, chatId, m);
+                await executeCmd(aliveCommand, sock, chatId, m);
                 break;
             case 'ping':
-                await pingCommand(sock, chatId, m);
+                await executeCmd(pingCommand, sock, chatId, m);
                 break;
             case 'gemini':
             case 'ai':
-                await aiCommand(sock, chatId, m);
+                await executeCmd(aiCommand, sock, chatId, m);
                 break;
             case 'sticker':
             case 's':
-                await stickerCommand(sock, chatId, m);
+                await executeCmd(stickerCommand, sock, chatId, m);
                 break;
             case 'song':
             case 'play':
-                await songCommand(sock, chatId, m);
+                await executeCmd(songCommand, sock, chatId, m);
                 break;
             case 'video':
-                await videoCommand(sock, chatId, m);
+                await executeCmd(videoCommand, sock, chatId, m);
                 break;
             case 'tagall':
-                await tagAllCommand(sock, chatId, m);
+                await executeCmd(tagAllCommand, sock, chatId, m);
                 break;
             case 'kick':
-                await kickCommand(sock, chatId, m);
+                await executeCmd(kickCommand, sock, chatId, m);
                 break;
             case 'promote':
-                await promoteCommand(sock, chatId, m);
+                await executeCmd(promoteCommand, sock, chatId, m);
                 break;
             case 'demote':
-                await demoteCommand(sock, chatId, m);
+                await executeCmd(demoteCommand, sock, chatId, m);
                 break;
             case 'owner':
-                await ownerCommand(sock, chatId);
+                await executeCmd(ownerCommand, sock, chatId);
                 break;
             default:
-                // കമാൻഡ് ലിസ്റ്റിൽ ഇല്ലാത്തവ ഗ്രൂപ്പിൽ ചാറ്റ്ബോട്ടിന് വിടുന്നു
                 if (isGroup) await handleChatbotResponse(sock, chatId, mek, userMessage, senderId);
                 break;
         }
