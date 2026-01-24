@@ -8,13 +8,29 @@
     "runtime": "V2",
     "numReplicas": 1,
     "sleepApplication": false,
-    "useLegacyStacker": false,
-    "multiRegionConfig": {
-      "europe-west4-drams3a": {
-        "numReplicas": 1
-      }
-    },
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
+  },
+  "variables": {
+    "SESSION_ID": {
+      "description": "Enter your LIZA-AI Session ID here",
+      "required": true
+    },
+    "OWNER_NUMBER": {
+      "description": "Your WhatsApp number (e.g., 918075379950)",
+      "defaultValue": "918075379950"
+    },
+    "MODE": {
+      "description": "Bot mode: public or private",
+      "defaultValue": "public"
+    },
+    "PREFIX": {
+      "description": "Bot command prefix",
+      "defaultValue": "."
+    },
+    "PREFIX_MODE": {
+      "description": "Prefix mode: hybrid, prefix, or no-prefix",
+      "defaultValue": "hybrid"
+    }
   }
 }
