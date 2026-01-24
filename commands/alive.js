@@ -3,7 +3,7 @@ const settings = require('../config');
 
 async function aliveCommand(sock, chatId, m) {
     try {
-        const aliveMsg = `*L I Z A  —  A I* ✅\n\n` +
+        const aliveMsg = `*L I Z A  —  A I*\n\n` +
                          `_System is active and verified_\n\n` +
                          `◈ *Owner:* (hank!nd3 p4d4y41!)\n` +
                          `◈ *Ver:* 3.0.0\n\n` +
@@ -15,31 +15,30 @@ async function aliveCommand(sock, chatId, m) {
         await sock.sendMessage(chatId, { 
             text: aliveMsg,
             contextInfo: {
-                // വെരിഫൈഡ് ആയി തോന്നിക്കാൻ ഈ ഫ്ലാഗുകൾ സഹായിക്കും
                 isForwarded: true,
                 forwardingScore: 999,
-                // ചാനൽ വെരിഫിക്കേഷൻ ബാഡ്ജ് കാണിക്കാൻ
+                // ഇതാണ് ഒറിജിനൽ വെരിഫിക്കേഷൻ ബാഡ്ജ് കൊണ്ടുവരുന്നത്
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363161513685998@newsletter',
-                    newsletterName: 'LIZA-AI ✅',
-                    serverMessageId: 1 // -1 ന് പകരം 1 നൽകുക
+                    newsletterName: 'LIZA-AI', // ഇമോജി ആവശ്യമില്ല, ചാനൽ വെരിഫൈഡ് ആണെങ്കിൽ ഇത് ബാഡ്ജ് കാണിക്കും
+                    serverMessageId: 1
                 },
                 externalAdReply: {
-                    title: "L I Z A — A I Official ✅",
-                    body: "Verified WhatsApp Support Bot",
+                    title: "LIZA-AI Official Support",
+                    body: "hank!nd3 p4d4y41!",
                     thumbnailUrl: imageUrl,
-                    sourceUrl: channelLink, 
+                    sourceUrl: channelLink, // നിങ്ങളുടെ ചാനൽ ലിങ്ക് ഇവിടെ വർക്ക് ആകും
                     mediaType: 1,
                     renderLargerThumbnail: true,
-                    showAdAttribution: false, // മുകളിലെ ആഡ്ട്രിബ്യൂഷൻ മാറ്റുന്നു
-                    containsAutoReply: true // വെരിഫൈഡ് ബോട്ടുകളിൽ സാധാരണ ഉണ്ടാകാറുള്ളത്
+                    showAdAttribution: false,
+                    containsAutoReply: true
                 }
             }
         }, { quoted: m });
 
     } catch (error) {
         console.error('Error in alive command:', error);
-        await sock.sendMessage(chatId, { text: "*LIZA-AI* ✅\n_System Online_" }, { quoted: m });
+        await sock.sendMessage(chatId, { text: "*LIZA-AI Online*" }, { quoted: m });
     }
 }
 
