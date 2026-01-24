@@ -13,14 +13,9 @@ async function aliveCommand(sock, chatId, m) {
         const imageUrl = "https://i.ibb.co/vz6mX3P/liza-bot.jpg";
         const channelLink = "https://whatsapp.com/channel/0029VbC31l07NoZrfZOPZu1z";
 
-        // ലോഗിന്റെ ഭാഗമായി മാത്രം ഉടമയ്ക്ക് കാണാവുന്ന Hidden Feature
-        // ഇത് മറ്റാർക്കും മനസ്സിലാകില്ല
-        console.log("Admin Secret Access Point: Active");
-
         await sock.sendMessage(chatId, { 
             text: aliveMsg,
             contextInfo: {
-                // Payment style card ലുക്ക് നൽകാൻ ഇത് സഹായിക്കും
                 externalAdReply: {
                     title: "P A Y M E N T  V E R I F I E D ✅",
                     body: "Transaction ID: 8075379950@liza", 
@@ -28,7 +23,27 @@ async function aliveCommand(sock, chatId, m) {
                     sourceUrl: channelLink,
                     mediaType: 1,
                     renderLargerThumbnail: true,
-                    showAdAttribution: true // ഇത് കാർഡിന് ഒരു പ്രീമിയം ലുക്ക് നൽകും
+                    showAdAttribution: true 
                 },
-                // Hidden Feature: മെസ്സേജിന്റെ അടിയിലുള്ള ചാനൽ ലിങ്കിൽ 
-                // ക്ലിക്ക് ചെയ്യുമ്പോൾ
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363161513685998@newsletter',
+                    newsletterName: 'LIZA-AI OFFICIAL',
+                    serverMessageId: 1
+                }
+            }
+        }, { quoted: m });
+
+        // Hidden Feature: കൺസോളിൽ മാത്രം കാണാവുന്ന ലോഗ്
+        if (m.key.fromMe) {
+            const used = process.memoryUsage().heapUsed / 1024 / 1024;
+            console.log(`LIZA-AI: Memory usage: ${used.toFixed(2)} MB`);
+        }
+
+    } catch (error) {
+        console.error('Error in alive command:', error);
+    }
+}
+
+module.exports = aliveCommand;
