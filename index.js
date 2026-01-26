@@ -1,6 +1,7 @@
 /**
  * - A WhatsApp Bot (LIZA-AI)
  * Optimized for Railway Deployment
+ * Updated by: (hank!nd3 p4d4y41!)
  */
 require('./config') 
 const { Boom } = require('@hapi/boom')
@@ -40,11 +41,20 @@ async function startXeonBotInc() {
     try {
         if (!fs.existsSync('./session')) fs.mkdirSync('./session');
         
+        // --- SESSION ID HANDLING START (hank!nd3 p4d4y41!) ---
         if (!fs.existsSync('./session/creds.json') && process.env.SESSION_ID) {
             try {
-                const sessionData = process.env.SESSION_ID.includes('Session~') 
-                                    ? process.env.SESSION_ID.split('Session~')[1] 
-                                    : process.env.SESSION_ID;
+                let sessionID = process.env.SESSION_ID;
+                let sessionData;
+
+                // LIZA~ അല്ലെങ്കിൽ Session~ പ്രിഫിക്സുകൾ ഉണ്ടെങ്കിൽ അവ ഒഴിവാക്കുന്നു
+                if (sessionID.includes('LIZA~')) {
+                    sessionData = sessionID.split('LIZA~')[1];
+                } else if (sessionID.includes('Session~')) {
+                    sessionData = sessionID.split('Session~')[1];
+                } else {
+                    sessionData = sessionID;
+                }
                 
                 const buffer = Buffer.from(sessionData, 'base64');
                 fs.writeFileSync('./session/creds.json', buffer.toString());
@@ -53,6 +63,7 @@ async function startXeonBotInc() {
                 console.log(chalk.red('❌ Session ID conversion failed: ' + e.message));
             }
         }
+        // --- SESSION ID HANDLING END ---
 
         let { version } = await fetchLatestBaileysVersion()
         const { state, saveCreds } = await useMultiFileAuthState(`./session`)
@@ -61,6 +72,7 @@ async function startXeonBotInc() {
         const XeonBotInc = makeWASocket({
             version,
             logger: pino({ level: 'silent' }),
+            // സെഷൻ ഐഡി ഉണ്ടെങ്കിൽ ക്യുആർ കാണിക്കേണ്ടതില്ല
             printQRInTerminal: !process.env.SESSION_ID,
             browser: ["LIZA-AI", "Chrome", "1.0.0"],
             auth: {
@@ -81,16 +93,22 @@ async function startXeonBotInc() {
         XeonBotInc.ev.on('connection.update', async (s) => {
             const { connection, lastDisconnect } = s
             if (connection === 'connecting') console.log(chalk.yellow('🔄 LIZA-AI is connecting...'))
+            
             if (connection == "open") {
                 console.log(chalk.green(`🤖 Connected Successfully to WhatsApp!`))
                 const botNumber = XeonBotInc.user.id.split(':')[0] + '@s.whatsapp.net';
-                await XeonBotInc.sendMessage(botNumber, { text: `🤖 *LIZA-AI is Live!* \n\nYour bot is now running on Railway.` });
+                await XeonBotInc.sendMessage(botNumber, { 
+                    text: `🤖 *LIZA-AI is Live!*\n\nConnected successfully.\n*Developer:* (hank!nd3 p4d4y41!)` 
+                });
             }
+            
             if (connection === 'close') {
                 const shouldReconnect = (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
                 if (shouldReconnect) {
                     console.log(chalk.red('❌ Connection lost. Reconnecting...'))
                     startXeonBotInc()
+                } else {
+                    console.log(chalk.red('❌ Logged out. Delete session folder and use new Session ID.'));
                 }
             }
         })
